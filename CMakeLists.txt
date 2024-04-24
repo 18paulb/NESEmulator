@@ -9,4 +9,5 @@ add_executable(NESEmulator
         CPU.cpp
         CPU.h
         AddressingMode.h
-        StatusFlag.h)
+        StatusFlag.h
+        main.cpp)
