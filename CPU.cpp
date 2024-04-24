@@ -59,7 +59,7 @@ void CPU::LDA_ZeroPage(uint8_t address) {
 }
 
 void CPU::LDA_ZeroPageX(uint8_t address) {
-    uint8_t newAddress = address + xIndex;
+    uint8_t newAddress = address + xRegister;
 
     accumulator = memory[newAddress];
 }
@@ -69,19 +69,19 @@ void CPU::LDA_Absolute(uint16_t address) {
 }
 
 void CPU::LDA_AbsoluteX(uint16_t address) {
-    uint16_t newAddress = address + xIndex;
+    uint16_t newAddress = address + xRegister;
 
     accumulator = memory[newAddress];
 }
 
 void CPU::LDA_AbsoluteY(uint16_t address) {
-    uint16_t newAddress = address + yIndex;
+    uint16_t newAddress = address + yRegister;
 
     accumulator = memory[newAddress];
 }
 
 void CPU::LDA_IndirectX(uint8_t address) {
-    uint8_t val = address + xIndex;
+    uint8_t val = address + xRegister;
 
     uint8_t lowByte = memory[val];
     uint8_t highByte = memory[val+1];
@@ -98,7 +98,7 @@ void CPU::LDA_IndirectY(uint8_t address) {
 
     uint16_t targetAddress = (highByte << 8) | lowByte;
 
-    targetAddress += yIndex;
+    targetAddress += yRegister;
 
     accumulator = memory[targetAddress];
 }
@@ -124,38 +124,38 @@ void CPU::LDX(AddressingMode mode, T value) {
     }
 
     // Set Flags
-    if (xIndex == 0) {
+    if (xRegister == 0) {
         setFlag(StatusFlag::Zero);
     }
 
     // if bit 7 of accumulator is set
-    if (xIndex & 0x80) {
+    if (xRegister & 0x80) {
         setFlag(StatusFlag::Negative);
     }
 }
 
 void CPU::LDX_Immediate(uint8_t value) {
-    xIndex = value;
+    xRegister = value;
 }
 
 void CPU::LDX_ZeroPage(uint8_t address) {
-    xIndex = memory[address];
+    xRegister = memory[address];
 }
 
 void CPU::LDX_ZeroPageY(uint8_t address) {
-    uint8_t newAddress = address + yIndex;
+    uint8_t newAddress = address + yRegister;
 
-    xIndex = memory[newAddress];
+    xRegister = memory[newAddress];
 }
 
 void CPU::LDX_Absolute(uint16_t address) {
-    xIndex = memory[address];
+    xRegister = memory[address];
 }
 
 void CPU::LDX_AbsoluteY(uint16_t address) {
-    uint16_t newAddress = address + yIndex;
+    uint16_t newAddress = address + yRegister;
 
-    xIndex = memory[newAddress];
+    xRegister = memory[newAddress];
 }
 
 template<typename T>
@@ -179,39 +179,176 @@ void CPU::LDY(AddressingMode mode, T value) {
     }
 
     // Set Flags
-    if (yIndex == 0) {
+    if (yRegister == 0) {
         setFlag(StatusFlag::Zero);
     }
 
     // if bit 7 of accumulator is set
-    if (yIndex & 0x80) {
+    if (yRegister & 0x80) {
         setFlag(StatusFlag::Negative);
     }
 }
 
 
 void CPU::LDY_Immediate(uint8_t value) {
-    yIndex = value;
+    yRegister = value;
 }
 
 void CPU::LDY_ZeroPage(uint8_t address) {
-    yIndex = memory[address];
+    yRegister = memory[address];
 }
 
 void CPU::LDY_ZeroPageX(uint8_t address) {
-    uint8_t newAddress = address + xIndex;
+    uint8_t newAddress = address + xRegister;
 
-    yIndex = memory[newAddress];
+    yRegister = memory[newAddress];
 }
 
 void CPU::LDY_Absolute(uint16_t address) {
-    yIndex = memory[address];
+    yRegister = memory[address];
 }
 
 void CPU::LDY_AbsoluteX(uint16_t address) {
-    uint16_t newAddress = address + xIndex;
+    uint16_t newAddress = address + xRegister;
 
-    yIndex = memory[newAddress];
+    yRegister = memory[newAddress];
+}
+
+template<typename T>
+void CPU::STA(AddressingMode mode, T value) {
+    switch (mode) {
+        case ZeroPage:
+            STA_ZeroPage(static_cast<uint8_t>(value));
+            break;
+        case ZeroPageX:
+            STA_ZeroPageX(static_cast<uint8_t>(value));
+            break;
+        case Absolute:
+            STA_Absolute(static_cast<uint16_t>(value));
+            break;
+        case AbsoluteX:
+            STA_AbsoluteX(static_cast<uint16_t>(value));
+            break;
+        case AbsoluteY:
+            STA_AbsoluteY(static_cast<uint16_t>(value));
+            break;
+        case IndirectX:
+            STA_IndirectX(static_cast<uint8_t>(value));
+            break;
+        case IndirectY:
+            STA_IndirectY(static_cast<uint8_t>(value));
+            break;
+    }
+}
+
+void CPU::STA_ZeroPage(uint8_t address) {
+    memory[address] = accumulator;
+}
+
+void CPU::STA_ZeroPageX(uint8_t address) {
+    uint8_t newAddress = address + xRegister;
+
+    memory[newAddress] = accumulator;
+}
+
+void CPU::STA_Absolute(uint16_t address) {
+    memory[address] = accumulator;
+}
+
+void CPU::STA_AbsoluteX(uint16_t address) {
+    uint16_t newAddress = address + xRegister;
+
+    memory[newAddress] = accumulator;
+}
+
+void CPU::STA_AbsoluteY(uint16_t address) {
+    uint16_t newAddress = address + yRegister;
+
+    memory[newAddress] = accumulator;
+}
+
+void CPU::STA_IndirectX(uint8_t address) {
+    uint8_t val = address + xRegister;
+
+    uint8_t lowByte = memory[val];
+    uint8_t highByte = memory[val+1];
+
+    // Combine the low and high bytes to form a 16-bit target address
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+
+    memory[targetAddress] = accumulator;
+}
+
+void CPU::STA_IndirectY(uint8_t address) {
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address+1];
+
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+
+    targetAddress += yRegister;
+
+    memory[targetAddress] = accumulator;
+}
+
+
+template<typename T>
+void CPU::STX(AddressingMode mode, T value) {
+    switch (mode) {
+        case ZeroPage:
+            STX_ZeroPage(static_cast<uint8_t>(value));
+            break;
+        case ZeroPageY:
+            STX_ZeroPageY(static_cast<uint8_t>(value));
+            break;
+        case Absolute:
+            STX_Absolute(static_cast<uint16_t>(value));
+            break;
+    }
+}
+
+void CPU::STX_ZeroPage(uint8_t address) {
+    memory[address] = xRegister;
+}
+
+void CPU::STX_ZeroPageY(uint8_t address) {
+    uint8_t newAddress = address + yRegister;
+
+    memory[address] = xRegister;
+}
+
+void CPU::STX_Absolute(uint16_t address) {
+    memory[address] = xRegister;
+}
+
+
+template<typename T>
+void CPU::STY(AddressingMode mode, T value) {
+    switch (mode) {
+        case ZeroPage:
+            STY_ZeroPage(static_cast<uint8_t>(value));
+            break;
+        case ZeroPageX:
+            STY_ZeroPageX(static_cast<uint8_t>(value));
+            break;
+        case Absolute:
+            STY_Absolute(static_cast<uint16_t>(value));
+            break;
+    }
+}
+
+
+void CPU::STY_ZeroPage(uint8_t address) {
+    memory[address] = yRegister;
+}
+
+void CPU::STY_ZeroPageX(uint8_t address) {
+    uint8_t newAddress = address + xRegister;
+
+    memory[newAddress] = yRegister;
+}
+
+void CPU::STY_Absolute(uint16_t address) {
+    memory[address] = yRegister;
 }
 
 
