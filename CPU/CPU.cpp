@@ -2,7 +2,7 @@
 // Created by Brandon Paul on 4/21/24.
 //
 
-#include "CPU.h"
+#include "CPU/CPU.h"
 
 void CPU::incrementCounter() {
     programCounter++;

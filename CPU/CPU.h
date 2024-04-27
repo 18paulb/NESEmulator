@@ -33,6 +33,28 @@ private:
 
 public:
 
+    CPU() {
+        // This is the reset vector, and it should give the starting location of the PC
+        // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
+        programCounter = memory[0xFFFC] | memory[0xFFFD] << 8;
+    }
+
+    int peek(int address) {
+        return memory[address];
+    }
+
+    uint8_t getXRegister() {
+        return xRegister;
+    }
+
+    uint8_t getYRegister() {
+        return yRegister;
+    }
+
+    uint8_t getAccumulator() {
+        return accumulator;
+    }
+
     void incrementCounter();
 
     void setFlag(StatusFlag flag) {

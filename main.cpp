@@ -1,16 +1,25 @@
 //
 // Created by Brandon Paul on 4/24/24.
 //
-#include <cstdint>
 #include<iostream>
 
 using namespace std;
 
+#include <vector>
+#include "System.h"
+
 int main() {
-    uint8_t val = 250;
-    uint8_t val2 = 10;
+    // Load ROM file
+    System nes = System();
 
-    uint8_t result = val + val2;
+    std::vector<uint8_t> romData = nes.loadROM("/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/testROM/02-immediate.nes");
 
-    cout << "result: " << val;
+    for (int i = 0; i < romData.size(); ++i) {
+        if (romData[i] != '\0') {
+            cout << i << ": ";
+            cout << romData[i] << endl;
+        }
+    }
+
+    return 0;
 }
