@@ -8,6 +8,7 @@
 #include <cstdint>
 #include "StatusFlag.h"
 #include "AddressingMode.h"
+#include "CPU/Memory/Memory.h"
 
 class CPU {
 private:
@@ -28,19 +29,24 @@ private:
 
     uint8_t yRegister;
 
-    // Memory storage, 6502 has
-    uint8_t memory[65536];
+    // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
+    Memory memory;
 
 public:
 
     CPU() {
         // This is the reset vector, and it should give the starting location of the PC
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
-        programCounter = memory[0xFFFC] | memory[0xFFFD] << 8;
+        memory = Memory();
+        programCounter = memory.getMemory(0xFFFC) | memory.getMemory(0xFFFC) << 8;
+
+        // FROM NES docs:
+        // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
+        stackPointer = memory.getMemory(0x100);
     }
 
-    int peek(int address) {
-        return memory[address];
+    uint8_t peek(uint16_t address) {
+        return memory.getMemory(address);
     }
 
     uint8_t getXRegister() {

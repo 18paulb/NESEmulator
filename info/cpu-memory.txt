@@ -1,0 +1,5 @@
+RAM - $0000 - $2000
+I/0 Registers - $2000 - $4020
+Expansion ROM - $4020 - $6000
+SRAM - $6000 - $8000
+PRG-ROM - $8000 - ON

@@ -1,0 +1,9 @@
+From $8000 onwards is the addresses allocated to cartridge PRG-ROM.
+
+Games with only one 16 KB bank of PRG-ROM will load it into both $8000 and $C000. This is to ensure that the vector table is located in the correct addresses.
+
+Games with two 16 KB PRG-ROM banks will load one into $8000 and the other into $C000.
+
+Games with more than two banks use memory mappers to determine which banks to load into memory.
+The memory mapper monitors memory writes for a specific address (or range of addresses) and when that address is written to, it performs a bank switch.
+The details vary between different memory mappers and more information can be found in Appendix D.

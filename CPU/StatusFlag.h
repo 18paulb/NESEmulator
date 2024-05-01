@@ -9,7 +9,8 @@
 enum StatusFlag {
     Carry,
     Zero,
-    InterruptDisable,
+//    InterruptDisable,
+    Break,
     Decimal,
     Overflow,
     Negative

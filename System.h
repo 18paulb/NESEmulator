@@ -15,14 +15,20 @@ using namespace std;
 
 namespace fs = std::__fs::filesystem;
 
-
-
 class System {
 private:
     CPU cpu;
     int cycleCount;
 
 public:
+
+    System() {
+        cpu = CPU();
+    }
+
+    CPU getCPU() {
+        return cpu;
+    }
 
     void step(int count) {
         cycleCount += count;
