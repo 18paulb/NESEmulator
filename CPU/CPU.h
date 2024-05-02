@@ -45,6 +45,10 @@ public:
         stackPointer = memory.getMemory(0x100);
     }
 
+    Memory getMemory() {
+        return memory;
+    }
+
     uint8_t peek(uint16_t address) {
         return memory.getMemory(address);
     }

@@ -5,9 +5,8 @@
 #ifndef NESEMULATOR_SYSTEM_H
 #define NESEMULATOR_SYSTEM_H
 
-using namespace std;
-
 #include "CPU/CPU.h"
+#include "ROM/ROMReader.h"
 #include <string>
 #include <fstream>
 #include <filesystem>
@@ -18,25 +17,29 @@ namespace fs = std::__fs::filesystem;
 class System {
 private:
     CPU cpu;
+    ROMReader romReader;
     int cycleCount;
 
 public:
 
     System() {
         cpu = CPU();
+        romReader = ROMReader();
+        cycleCount = 0;
     }
 
-    CPU getCPU() {
+    CPU& getCPU() {
         return cpu;
+    }
+
+    ROMReader& getRomReader() {
+        return romReader;
     }
 
     void step(int count) {
         cycleCount += count;
     }
 
-    vector<uint8_t> loadROM(string filePath);
-
-    void runROM(string romFile);
 
 };
 
