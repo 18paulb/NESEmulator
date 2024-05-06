@@ -9,8 +9,10 @@
 #include "StatusFlag.h"
 #include "AddressingMode.h"
 #include "CPU/Memory/Memory.h"
+#include "SystemPart.h"
+#include "CPU/OpCode/OpcodeHelper.h"
 
-class CPU {
+class CPU : public SystemPart {
 private:
 
     // 16-bit register which points to the next instruction to be executed
@@ -32,27 +34,56 @@ private:
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
     Memory* memory;
 
+    OpcodeHelper opcodeHelper;
+
+    int cycle;
+
 public:
 
-    CPU() {
+    CPU() : SystemPart() {
         // This is the reset vector, and it should give the starting location of the PC
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
+        cycle = 0;
         memory = new Memory();
-//        programCounter = memory.getMemory(0xFFFC) | memory.getMemory(0xFFFC) << 8;
-
-        // Just for now start it at the beginning of PRG_ROM loaded data
-        programCounter = 0x8000;
+        opcodeHelper = OpcodeHelper();
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
         stackPointer = 0x0100;
     }
 
+    ~CPU() {
+        delete memory;
+    }
+
+    void initializeProgramCounter() {
+        // When ROM is loaded, look at address 0xFFFC & 0xFFFD in order to find reset vector
+        uint8_t lsb = memory->getMemory(0xFFFC); // LSB of the reset vector
+        uint8_t msb = memory->getMemory(0xFFFD); // MSB of the reset vector
+
+        // Get the address that the reset vector is pointing to
+        uint16_t resetVectorAddress = (msb << 8) | lsb;
+
+        programCounter = resetVectorAddress;
+    };
+
     Memory* getMemory() {
         return memory;
     }
 
-    void executeInstruction();
+    void executeInstruction() {
+
+        AddressingMode mode = opcodeHelper.getAddressingMode(peek(programCounter));
+        programCounter++;
+    }
+
+    void decodeOperand(uint8_t);
+
+    void step_to(int newCount) override {
+        while (cycle < newCount) {
+            executeInstruction();
+        }
+    }
 
     uint8_t peek(uint16_t address) {
         return memory->getMemory(address);
@@ -178,10 +209,13 @@ public:
     template<typename T>
     void STY(AddressingMode, T);
 
+    // Store Y Register - opcode $84
     void STY_ZeroPage(uint8_t);
 
+    // Store Y Register - opcode $94
     void STY_ZeroPageX(uint8_t);
 
+    // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
 
 };

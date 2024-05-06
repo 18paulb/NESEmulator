@@ -40,39 +40,41 @@ void ROMReader::loadROMIntoCPU(CPU* cpu) {
     loadPRGIntoCPU(cpu);
 }
 
-// TODO: This does not account for different offsets if there is a trainer present, fix eventually
 void ROMReader::loadPRGIntoCPU(CPU* cpu) {
-
-    const int PRG_BANK_SIZE = 16384;
-    const int HEADER_SIZE = 16;
 
     const uint16_t firstBankAddr = 0x8000;
     const uint16_t secondBankAddr = 0xC000;
 
     // Games with only one 16 KB bank of PRG-ROM will load it into both $8000 and $C000.
     if (numPRG_ROM == 1) {
-        for (int i = 0; i < PRG_BANK_SIZE; ++i) {
+        for (int i = 0; i < SIZE_PRG_BANK; ++i) {
 
-            uint8_t val = romData.at(i + HEADER_SIZE);
+            uint16_t startingOffset = i + SIZE_HEADER;
+            if (trainerPresence) startingOffset += SIZE_TRAINER;
+
+            uint8_t val = romData.at(startingOffset);
 
             cpu->getMemory()->setMemory(firstBankAddr+i, val);
-
             cpu->getMemory()->setMemory(secondBankAddr+i, val);
 
         }
     }
 
     if (numPRG_ROM == 2) {
-        for (int i = 0; i < PRG_BANK_SIZE; ++i) {
+        for (int i = 0; i < SIZE_PRG_BANK; ++i) {
 
-            uint8_t val = romData.at(i + HEADER_SIZE);
+            // Set the CPU memory starting at $8000
+            uint16_t startingOffset = i + SIZE_HEADER;
+            if (trainerPresence) startingOffset += SIZE_TRAINER;
+
+            uint8_t val = romData.at(startingOffset);
 
             cpu->getMemory()->setMemory(firstBankAddr+i, val);
 
-            uint8_t val2 = romData.at(i + HEADER_SIZE + PRG_BANK_SIZE);
+            // Set the CPU memory starting at $C000
+            uint8_t val2 = romData.at(startingOffset + SIZE_PRG_BANK);
 
             cpu->getMemory()->setMemory(secondBankAddr+i, val2);
-
         }
     }
 }

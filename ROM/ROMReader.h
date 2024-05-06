@@ -23,6 +23,11 @@ private:
     int numPRG_ROM;
     int numCHR_ROM;
 
+    const int SIZE_PRG_BANK = 16384;
+    const int SIZE_HEADER = 16;
+    const int SIZE_CRH_BANK = 8192;
+    const int SIZE_TRAINER = 512;
+
     vector<uint8_t> romData;
 
 public:

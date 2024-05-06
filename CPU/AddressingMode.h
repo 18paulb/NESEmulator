@@ -17,7 +17,8 @@ enum AddressingMode {
     AbsoluteY, // loads contents of some (absolute 16-bit address + contents of Y Register)
     Indirect,
     IndirectX,
-    IndirectY
+    IndirectY,
+    UNKNOWN
 };
 
 #endif //NESEMULATOR_ADRESSINGMODE_H
