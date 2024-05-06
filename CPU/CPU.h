@@ -30,27 +30,32 @@ private:
     uint8_t yRegister;
 
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
-    Memory memory;
+    Memory* memory;
 
 public:
 
     CPU() {
         // This is the reset vector, and it should give the starting location of the PC
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
-        memory = Memory();
-        programCounter = memory.getMemory(0xFFFC) | memory.getMemory(0xFFFC) << 8;
+        memory = new Memory();
+//        programCounter = memory.getMemory(0xFFFC) | memory.getMemory(0xFFFC) << 8;
+
+        // Just for now start it at the beginning of PRG_ROM loaded data
+        programCounter = 0x8000;
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
-        stackPointer = memory.getMemory(0x100);
+        stackPointer = 0x0100;
     }
 
-    Memory getMemory() {
+    Memory* getMemory() {
         return memory;
     }
 
+    void executeInstruction();
+
     uint8_t peek(uint16_t address) {
-        return memory.getMemory(address);
+        return memory->getMemory(address);
     }
 
     uint8_t getXRegister() {

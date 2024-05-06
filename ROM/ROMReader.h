@@ -30,13 +30,13 @@ public:
 
     void parseROMHeader();
 
-    void loadROMIntoCPU(CPU& cpu);
+    void loadROMIntoCPU(CPU* cpu);
 
-    void loadPRGIntoCPU(CPU& cpu);
+    void loadPRGIntoCPU(CPU* cpu);
 
-    void loadCHRIntoCPU(CPU& cpu);
+    void loadCHRIntoCPU(CPU* cpu);
 
-    void loadTrainerIntoCPU(CPU& cpu);
+    void loadTrainerIntoCPU(CPU* cpu);
 };
 
 

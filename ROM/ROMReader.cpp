@@ -36,12 +36,12 @@ void ROMReader::parseROMHeader() {
     this->mapperNumber = mapperNumberPart1 + mapperNumberPart2;
 }
 
-void ROMReader::loadROMIntoCPU(CPU& cpu) {
+void ROMReader::loadROMIntoCPU(CPU* cpu) {
     loadPRGIntoCPU(cpu);
 }
 
 // TODO: This does not account for different offsets if there is a trainer present, fix eventually
-void ROMReader::loadPRGIntoCPU(CPU& cpu) {
+void ROMReader::loadPRGIntoCPU(CPU* cpu) {
 
     const int PRG_BANK_SIZE = 16384;
     const int HEADER_SIZE = 16;
@@ -55,9 +55,9 @@ void ROMReader::loadPRGIntoCPU(CPU& cpu) {
 
             uint8_t val = romData.at(i + HEADER_SIZE);
 
-            cpu.getMemory().setMemory(firstBankAddr+i, val);
+            cpu->getMemory()->setMemory(firstBankAddr+i, val);
 
-            cpu.getMemory().setMemory(secondBankAddr+i, val);
+            cpu->getMemory()->setMemory(secondBankAddr+i, val);
 
         }
     }
@@ -67,11 +67,11 @@ void ROMReader::loadPRGIntoCPU(CPU& cpu) {
 
             uint8_t val = romData.at(i + HEADER_SIZE);
 
-            cpu.getMemory().setMemory(firstBankAddr+i, val);
+            cpu->getMemory()->setMemory(firstBankAddr+i, val);
 
             uint8_t val2 = romData.at(i + HEADER_SIZE + PRG_BANK_SIZE);
 
-            cpu.getMemory().setMemory(secondBankAddr+i, val2);
+            cpu->getMemory()->setMemory(secondBankAddr+i, val2);
 
         }
     }

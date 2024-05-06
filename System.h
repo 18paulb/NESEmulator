@@ -12,27 +12,25 @@
 #include <filesystem>
 #include <vector>
 
-namespace fs = std::__fs::filesystem;
-
 class System {
 private:
-    CPU cpu;
-    ROMReader romReader;
+    CPU* cpu;
+    ROMReader* romReader;
     int cycleCount;
 
 public:
 
     System() {
-        cpu = CPU();
-        romReader = ROMReader();
+        cpu = new CPU();
+        romReader = new ROMReader();
         cycleCount = 0;
     }
 
-    CPU& getCPU() {
+    CPU* getCPU() {
         return cpu;
     }
 
-    ROMReader& getRomReader() {
+    ROMReader* getRomReader() {
         return romReader;
     }
 
