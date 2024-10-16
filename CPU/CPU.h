@@ -22,6 +22,12 @@ private:
     // 16-bit register which points to the next instruction to be executed
     uint16_t programCounter;
 
+    /*
+    The stack pointer is an 8-bit register
+    which serves as an offset from $0100. The stack works top-down, so when a byte is pushed
+    on to the stack, the stack pointer is decremented and when a byte is pulled from the stack,
+    the stack pointer is incremented.
+    */
     uint8_t stackPointer;
 
     // Processor Status
@@ -53,7 +59,8 @@ public:
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
-        stackPointer = 0x0100;
+        // IMPORTANT: When pushing to stack make sure to add offset of $0100
+        stackPointer = 0x00;
     }
 
     ~CPU() {
@@ -71,8 +78,12 @@ public:
         programCounter = resetVectorAddress;
     };
 
-    Memory* getMemory() {
-        return memory;
+    uint8_t getMemory(uint16_t address) {
+        return memory->getMemory(address);
+    }
+
+    void setMemory(uint16_t address, uint8_t value) {
+        memory->setMemory(address, value);
     }
 
     void executeInstruction() {
@@ -82,6 +93,8 @@ public:
         // Next we'll need to determine which instruction type (LDA, STA, etc.)
 
         // From there you need to determine the n amount of bytes after for arguments of the instruction
+
+        cycle++;
 
         programCounter++;
     }
