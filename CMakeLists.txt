@@ -13,14 +13,14 @@ add_executable(NESEmulator
         CPU/StatusFlag.h
         main.cpp
         tests/tests.cpp
-        System.h
-        System.cpp
+        System/System.h
+        System/System.cpp
         CPU/Memory/Memory.h
         CPU/Memory/Memory.cpp
         ROM/ROMReader.cpp
         ROM/ROMReader.h
         CPU/OpCode/OpcodeHelper.h
-        SystemPart.h
+        System/SystemPart.h
 )
 
 # Test executable

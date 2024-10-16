@@ -31,7 +31,7 @@ private:
     vector<uint8_t> romData;
 
 public:
-    void loadROM(string& filePath);
+    void loadROM(string& filePath, CPU* cpu);
 
     void parseROMHeader();
 

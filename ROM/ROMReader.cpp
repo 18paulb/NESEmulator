@@ -4,17 +4,18 @@
 
 #include "ROMReader.h"
 
-void ROMReader::loadROM(string& filePath) {
+void ROMReader::loadROM(string& filePath, CPU* cpu) {
     ifstream romFile(filePath, std::ios::binary);
 
     if (!romFile.is_open()) {
         return;
     }
-    vector<uint8_t> romData{istreambuf_iterator<char>{romFile}, {}};
+    vector<uint8_t> tmpRomData{istreambuf_iterator<char>{romFile}, {}};
 
-    this->romData = romData;
+    this->romData = tmpRomData;
 
     parseROMHeader();
+    loadROMIntoCPU(cpu);
 }
 
 void ROMReader::parseROMHeader() {

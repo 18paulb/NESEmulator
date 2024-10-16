@@ -6,19 +6,14 @@
 using namespace std;
 
 #include <vector>
-#include "System.h"
+#include "System/System.h"
 
 int main() {
     // Load ROM file
     System nes = System();
 
     nes.getRomReader()->loadROM(
-            (string &) "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/testROM/cpu_dummy_reads.nes");
-
-//    nes.getRomReader()->loadROM(
-//            (string &) "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/testROM/02-immediate.nes");
-
-    nes.getRomReader()->loadROMIntoCPU(nes.getCPU());
+            (string &) "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/testROM/cpu_dummy_reads.nes", nes.getCPU());
 
     nes.getCPU()->initializeProgramCounter();
 

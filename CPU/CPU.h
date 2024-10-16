@@ -6,11 +6,15 @@
 #define NESEMULATOR_CPU_H
 
 #include <cstdint>
+#include <iostream>
+
 #include "StatusFlag.h"
 #include "AddressingMode.h"
 #include "CPU/Memory/Memory.h"
-#include "SystemPart.h"
+#include "System/SystemPart.h"
 #include "CPU/OpCode/OpcodeHelper.h"
+
+using namespace std;
 
 class CPU : public SystemPart {
 private:
@@ -74,6 +78,11 @@ public:
     void executeInstruction() {
 
         AddressingMode mode = opcodeHelper.getAddressingMode(peek(programCounter));
+
+        // Next we'll need to determine which instruction type (LDA, STA, etc.)
+
+        // From there you need to determine the n amount of bytes after for arguments of the instruction
+
         programCounter++;
     }
 

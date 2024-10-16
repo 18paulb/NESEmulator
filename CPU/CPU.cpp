@@ -44,6 +44,8 @@ void CPU::LDA(AddressingMode mode, T value) {
             LDA_AbsoluteY(static_cast<uint16_t>(value));
             programCounter += 3;
             break;
+        default:
+            cout << "Error with LDA type" << endl;
     }
 
     // Set Flags
@@ -135,6 +137,8 @@ void CPU::LDX(AddressingMode mode, T value) {
             LDX_AbsoluteY(static_cast<uint16_t>(value));
             programCounter += 3;
             break;
+        default:
+            cout << "Error with LDX type" << endl;
     }
 
     // Set Flags
@@ -195,6 +199,8 @@ void CPU::LDY(AddressingMode mode, T value) {
             LDY_AbsoluteX(static_cast<uint16_t>(value));
             programCounter += 3;
             break;
+        default:
+            cout << "Error with LDY type" << endl;
     }
 
     // Set Flags
@@ -264,6 +270,8 @@ void CPU::STA(AddressingMode mode, T value) {
             STA_IndirectY(static_cast<uint8_t>(value));
             programCounter += 2;
             break;
+        default:
+            cout << "Error with STA type" << endl;
     }
 }
 
@@ -333,6 +341,8 @@ void CPU::STX(AddressingMode mode, T value) {
             STX_Absolute(static_cast<uint16_t>(value));
             programCounter += 3;
             break;
+        default:
+            cout << "Error with STX type" << endl;
     }
 }
 
@@ -366,6 +376,8 @@ void CPU::STY(AddressingMode mode, T value) {
             STY_Absolute(static_cast<uint16_t>(value));
             programCounter += 3;
             break;
+        default:
+            cout << "Error with STY type" << endl;
     }
 }
 

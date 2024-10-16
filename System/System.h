@@ -28,6 +28,7 @@ public:
 
     ~System() {
         delete cpu;
+        delete romReader;
     }
 
     CPU* getCPU() {
