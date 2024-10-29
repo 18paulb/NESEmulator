@@ -65,53 +65,53 @@ void CPU::LDA_Immediate(uint8_t value) {
 }
 
 void CPU::LDA_ZeroPage(uint8_t address) {
-    accumulator = memory.getMemory(address);
+    accumulator = memory[address];
 }
 
 void CPU::LDA_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
 
-    accumulator = memory.getMemory(newAddress);
+    accumulator = memory[newAddress];
 }
 
 void CPU::LDA_Absolute(uint16_t address) {
-    accumulator = memory.getMemory(address);
+    accumulator = memory[address];
 }
 
 void CPU::LDA_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
 
-    accumulator = memory.getMemory(newAddress);
+    accumulator = memory[newAddress];
 }
 
 void CPU::LDA_AbsoluteY(uint16_t address) {
     uint16_t newAddress = address + yRegister;
 
-    accumulator = memory.getMemory(newAddress);
+    accumulator = memory[newAddress];
 }
 
 void CPU::LDA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
 
-    uint8_t lowByte = memory.getMemory(val);
+    uint8_t lowByte = memory[val];
 
-    uint8_t highByte = memory.getMemory(val + 1);
+    uint8_t highByte = memory[val + 1];
 
     // Combine the low and high bytes to form a 16-bit target address
     uint16_t targetAddress = (highByte << 8) | lowByte;
 
-    accumulator = memory.getMemory(targetAddress);
+    accumulator = memory[targetAddress];
 }
 
 void CPU::LDA_IndirectY(uint8_t address) {
-    uint8_t lowByte = memory.getMemory(address);
-    uint8_t highByte = memory.getMemory(address + 1);
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
 
     uint16_t targetAddress = (highByte << 8) | lowByte;
 
     targetAddress += yRegister;
 
-    accumulator = memory.getMemory(targetAddress);
+    accumulator = memory[targetAddress];
 }
 
 template<typename T>
@@ -157,23 +157,23 @@ void CPU::LDX_Immediate(uint8_t value) {
 }
 
 void CPU::LDX_ZeroPage(uint8_t address) {
-    xRegister = memory.getMemory(address);
+    xRegister = memory[address];
 }
 
 void CPU::LDX_ZeroPageY(uint8_t address) {
     uint8_t newAddress = address + yRegister;
 
-    xRegister = memory.getMemory(newAddress);
+    xRegister = memory[newAddress];
 }
 
 void CPU::LDX_Absolute(uint16_t address) {
-    xRegister = memory.getMemory(address);
+    xRegister = memory[address];
 }
 
 void CPU::LDX_AbsoluteY(uint16_t address) {
     uint16_t newAddress = address + yRegister;
 
-    xRegister = memory.getMemory(newAddress);
+    xRegister = memory[newAddress];
 }
 
 template<typename T>
@@ -220,23 +220,23 @@ void CPU::LDY_Immediate(uint8_t value) {
 }
 
 void CPU::LDY_ZeroPage(uint8_t address) {
-    yRegister = memory.getMemory(address);
+    yRegister = memory[address];
 }
 
 void CPU::LDY_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
 
-    yRegister = memory.getMemory(newAddress);
+    yRegister = memory[newAddress];
 }
 
 void CPU::LDY_Absolute(uint16_t address) {
-    yRegister = memory.getMemory(address);
+    yRegister = memory[address];
 }
 
 void CPU::LDY_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
 
-    yRegister = memory.getMemory(newAddress);
+    yRegister = memory[newAddress];
 }
 
 template<typename T>
@@ -304,9 +304,9 @@ void CPU::STA_AbsoluteY(uint16_t address) {
 void CPU::STA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
 
-    uint8_t lowByte = memory.getMemory(val);
+    uint8_t lowByte = memory[val];
 
-    uint8_t highByte = memory.getMemory(val + 1);
+    uint8_t highByte = memory[val + 1];
 
     // Combine the low and high bytes to form a 16-bit target address
     uint16_t targetAddress = (highByte << 8) | lowByte;
@@ -315,8 +315,8 @@ void CPU::STA_IndirectX(uint8_t address) {
 }
 
 void CPU::STA_IndirectY(uint8_t address) {
-    uint8_t lowByte = memory.getMemory(address);
-    uint8_t highByte = memory.getMemory(address + 1);
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
 
     uint16_t targetAddress = (highByte << 8) | lowByte;
 

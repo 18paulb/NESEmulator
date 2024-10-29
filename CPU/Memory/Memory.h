@@ -18,13 +18,12 @@ public:
         memory[address] = value;
     }
 
-    uint8_t getMemory(uint16_t address) {
+    // Overload the [] operator for easier access
+    uint8_t &operator[](uint16_t address) {
         return memory[address];
     }
 
 };
-
-
 
 
 #endif //NESEMULATOR_MEMORY_H

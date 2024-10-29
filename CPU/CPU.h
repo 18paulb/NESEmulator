@@ -65,8 +65,8 @@ public:
 
     void initializeProgramCounter() {
         // When ROM is loaded, look at address 0xFFFC & 0xFFFD in order to find reset vector
-        uint8_t lsb = memory.getMemory(0xFFFC); // LSB of the reset vector
-        uint8_t msb = memory.getMemory(0xFFFD); // MSB of the reset vector
+        uint8_t lsb = memory[0xFFFC]; // LSB of the reset vector
+        uint8_t msb = memory[0xFFFD]; // MSB of the reset vector
 
         // Get the address that the reset vector is pointing to
         uint16_t resetVectorAddress = (msb << 8) | lsb;
@@ -75,7 +75,7 @@ public:
     };
 
     uint8_t getMemory(uint16_t address) {
-        return memory.getMemory(address);
+        return memory[address];
     }
 
     void setMemory(uint16_t address, uint8_t value) {

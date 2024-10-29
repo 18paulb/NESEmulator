@@ -49,26 +49,28 @@ void ROMReader::loadPRGIntoCPU(CPU& cpu) {
     const uint16_t FIRST_BANK_ADDR = 0x8000;
     const uint16_t SECOND_BANK_ADDR = 0xC000;
 
-    for (int i = 0; i < SIZE_PRG_BANK; ++i) {
+    uint16_t startingOffset = SIZE_HEADER;
+    if (trainerPresence) startingOffset += SIZE_TRAINER;
 
-        uint16_t startingOffset = i + SIZE_HEADER;
-        if (trainerPresence) startingOffset += SIZE_TRAINER;
+    for (int i = 0; i < SIZE_PRG_BANK; ++i) {
 
         // Games with only one 16 KB bank of PRG-ROM will load it into both $8000 and $C000.
         if (numPRG_ROM == 1) {
-            uint8_t val = romData.at(startingOffset);
+            // Set the CPU memory starting at $8000
+            uint8_t val = romData.at(startingOffset + i);
 
             cpu.setMemory(FIRST_BANK_ADDR + i, val);
             cpu.setMemory(SECOND_BANK_ADDR + i, val);
         }
 
         // Games with two 16 KB banks of PRG-ROM will load first into $8000 and second into $C000
-        if (numPRG_ROM == 2) {
-            uint8_t val = romData.at(startingOffset);
+        else if (numPRG_ROM == 2) {
+            // Set the CPU memory starting at $8000
+            uint8_t val = romData.at(startingOffset + i);
             cpu.setMemory(FIRST_BANK_ADDR + i, val);
 
             // Set the CPU memory starting at $C000
-            uint8_t val2 = romData.at(startingOffset + SIZE_PRG_BANK);
+            uint8_t val2 = romData.at(startingOffset + SIZE_PRG_BANK + i);
             cpu.setMemory(SECOND_BANK_ADDR + i, val2);
         }
     }
