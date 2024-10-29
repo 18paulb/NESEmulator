@@ -14,33 +14,28 @@
 
 class System {
 private:
-    CPU* cpu;
-    ROMReader* romReader;
+    CPU cpu;
+    ROMReader romReader;
     int masterCycle;
 
 public:
 
     System() {
-        cpu = new CPU();
-        romReader = new ROMReader();
+        cpu = CPU();
+        romReader = ROMReader();
         masterCycle = 0;
     }
 
-    ~System() {
-        delete cpu;
-        delete romReader;
-    }
-
-    CPU* getCPU() {
+    CPU& getCPU() {
         return cpu;
     }
 
     void step(int count) {
         masterCycle += count;
-        cpu->step_to(masterCycle);
+        cpu.step_to(masterCycle);
     }
 
-    ROMReader* getRomReader() {
+    ROMReader getRomReader() {
         return romReader;
     }
 

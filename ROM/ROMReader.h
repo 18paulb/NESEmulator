@@ -23,25 +23,25 @@ private:
     int numPRG_ROM;
     int numCHR_ROM;
 
-    const int SIZE_PRG_BANK = 16384;
-    const int SIZE_HEADER = 16;
-    const int SIZE_CRH_BANK = 8192;
-    const int SIZE_TRAINER = 512;
+    static constexpr uint16_t SIZE_PRG_BANK = 16384;
+    static constexpr uint16_t SIZE_HEADER = 16;
+    static constexpr uint16_t SIZE_CRH_BANK = 8192;
+    static constexpr uint16_t SIZE_TRAINER = 512;
 
     vector<uint8_t> romData;
 
 public:
-    void loadROMFile(string& filePath, CPU* cpu);
+    void loadROMFile(string& filePath, CPU& cpu);
 
     void parseROMHeader();
 
-    void loadROMIntoCPU(CPU* cpu);
+    void loadROMIntoCPU(CPU& cpu);
 
-    void loadPRGIntoCPU(CPU* cpu);
+    void loadPRGIntoCPU(CPU& cpu);
 
-    void loadCHRIntoCPU(CPU* cpu);
+    void loadCHRIntoCPU(CPU& cpu);
 
-    void loadTrainerIntoCPU(CPU* cpu);
+    void loadTrainerIntoCPU(CPU& cpu);
 };
 
 

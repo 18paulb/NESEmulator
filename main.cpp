@@ -8,19 +8,27 @@ using namespace std;
 #include <vector>
 #include "System/System.h"
 
-int main() {
-    // Load ROM file
+int main(int argc, char *argv[]) {
+
+    // Default ROM file path
+//     string romFilePath = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/other/cpu_dummy_reads.nes";
+
+    // Use command line argument if provided, otherwise use default
+//     string romFilePath = (argc > 1) ? argv[1] : defaultRomFilePath;
+    string romFilePath = argv[1];
+
     System nes = System();
 
-    nes.getRomReader()->loadROMFile(
-            (string &) "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/testROM/cpu_dummy_reads.nes",
+    // Load ROM file
+    nes.getRomReader().loadROMFile(
+            (string &) romFilePath,
             nes.getCPU());
 
-    nes.getCPU()->initializeProgramCounter();
+    nes.getCPU().initializeProgramCounter();
 
     for (int i = 0; i < 65536; ++i) {
-        if (nes.getCPU()->getMemory(i) != '\0') {
-            cout << i << ": " << nes.getCPU()->getMemory(i) << endl;
+        if (nes.getCPU().getMemory(i) != '\0') {
+            cout << i << ": " << nes.getCPU().getMemory(i) << endl;
         }
     }
 

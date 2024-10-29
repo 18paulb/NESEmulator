@@ -42,7 +42,7 @@ private:
     uint8_t yRegister;
 
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
-    Memory* memory;
+    Memory memory;
 
     OpcodeHelper opcodeHelper;
 
@@ -54,7 +54,7 @@ public:
         // This is the reset vector, and it should give the starting location of the PC
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
         cycle = 0;
-        memory = new Memory();
+        memory = Memory();
         opcodeHelper = OpcodeHelper();
 
         // FROM NES docs:
@@ -63,14 +63,10 @@ public:
         stackPointer = 0x00;
     }
 
-    ~CPU() {
-        delete memory;
-    }
-
     void initializeProgramCounter() {
         // When ROM is loaded, look at address 0xFFFC & 0xFFFD in order to find reset vector
-        uint8_t lsb = memory->getMemory(0xFFFC); // LSB of the reset vector
-        uint8_t msb = memory->getMemory(0xFFFD); // MSB of the reset vector
+        uint8_t lsb = memory.getMemory(0xFFFC); // LSB of the reset vector
+        uint8_t msb = memory.getMemory(0xFFFD); // MSB of the reset vector
 
         // Get the address that the reset vector is pointing to
         uint16_t resetVectorAddress = (msb << 8) | lsb;
@@ -79,16 +75,16 @@ public:
     };
 
     uint8_t getMemory(uint16_t address) {
-        return memory->getMemory(address);
+        return memory.getMemory(address);
     }
 
     void setMemory(uint16_t address, uint8_t value) {
-        memory->setMemory(address, value);
+        memory.setMemory(address, value);
     }
 
     void executeInstruction() {
 
-        AddressingMode mode = opcodeHelper.getAddressingMode(peek(programCounter));
+        AddressingMode mode = opcodeHelper.getAddressingMode(getMemory(programCounter));
 
         // Next we'll need to determine which instruction type (LDA, STA, etc.)
 
@@ -99,16 +95,12 @@ public:
         programCounter++;
     }
 
-    void decodeOperand(uint8_t);
+    void decodeOperand(uint8_t) {};
 
     void step_to(int newCount) override {
         while (cycle < newCount) {
             executeInstruction();
         }
-    }
-
-    uint8_t peek(uint16_t address) {
-        return memory->getMemory(address);
     }
 
     uint8_t getXRegister() {

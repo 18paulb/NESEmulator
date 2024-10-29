@@ -4,7 +4,7 @@
 
 #include "ROMReader.h"
 
-void ROMReader::loadROMFile(string &filePath, CPU *cpu) {
+void ROMReader::loadROMFile(string &filePath, CPU& cpu) {
     ifstream romFile(filePath, std::ios::binary);
 
     if (!romFile.is_open()) {
@@ -38,13 +38,13 @@ void ROMReader::parseROMHeader() {
     this->mapperNumber = mapperNumberPart1 + mapperNumberPart2;
 }
 
-void ROMReader::loadROMIntoCPU(CPU *cpu) {
+void ROMReader::loadROMIntoCPU(CPU& cpu) {
     loadPRGIntoCPU(cpu);
     loadCHRIntoCPU(cpu);
     loadTrainerIntoCPU(cpu);
 }
 
-void ROMReader::loadPRGIntoCPU(CPU *cpu) {
+void ROMReader::loadPRGIntoCPU(CPU& cpu) {
 
     const uint16_t FIRST_BANK_ADDR = 0x8000;
     const uint16_t SECOND_BANK_ADDR = 0xC000;
@@ -58,24 +58,24 @@ void ROMReader::loadPRGIntoCPU(CPU *cpu) {
         if (numPRG_ROM == 1) {
             uint8_t val = romData.at(startingOffset);
 
-            cpu->setMemory(FIRST_BANK_ADDR + i, val);
-            cpu->setMemory(SECOND_BANK_ADDR + i, val);
+            cpu.setMemory(FIRST_BANK_ADDR + i, val);
+            cpu.setMemory(SECOND_BANK_ADDR + i, val);
         }
 
         // Games with two 16 KB banks of PRG-ROM will load first into $8000 and second into $C000
         if (numPRG_ROM == 2) {
             uint8_t val = romData.at(startingOffset);
-            cpu->setMemory(FIRST_BANK_ADDR + i, val);
+            cpu.setMemory(FIRST_BANK_ADDR + i, val);
 
             // Set the CPU memory starting at $C000
             uint8_t val2 = romData.at(startingOffset + SIZE_PRG_BANK);
-            cpu->setMemory(SECOND_BANK_ADDR + i, val2);
+            cpu.setMemory(SECOND_BANK_ADDR + i, val2);
         }
     }
 }
 
-void ROMReader::loadCHRIntoCPU(CPU *cpu) {
+void ROMReader::loadCHRIntoCPU(CPU& cpu) {
 }
 
-void ROMReader::loadTrainerIntoCPU(CPU *cpu) {
+void ROMReader::loadTrainerIntoCPU(CPU& cpu) {
 }
