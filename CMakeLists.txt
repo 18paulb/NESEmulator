@@ -21,6 +21,7 @@ add_executable(NESEmulator
         ROM/ROMReader.h
         CPU/OpCode/OpcodeHelper.h
         System/SystemPart.h
+        CPU/Instruction.h
 )
 
 # Test executable

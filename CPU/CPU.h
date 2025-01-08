@@ -84,9 +84,12 @@ public:
 
     void executeInstruction() {
 
-        AddressingMode mode = opcodeHelper.getAddressingMode(getMemory(programCounter));
+        uint8_t currOpCode = getMemory(programCounter);
+
+        AddressingMode mode = opcodeHelper.getAddressingMode(currOpCode);
 
         // Next we'll need to determine which instruction type (LDA, STA, etc.)
+        Instruction instruction = opcodeHelper.getInstruction(currOpCode);
 
         // From there you need to determine the n amount of bytes after for arguments of the instruction
 
