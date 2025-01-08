@@ -11,11 +11,10 @@ using namespace std;
 int main(int argc, char *argv[]) {
 
     // Default ROM file path
-//     string romFilePath = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/other/cpu_dummy_reads.nes";
+     string defaultRomFilePath = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/other/balloonfight.nes";
 
     // Use command line argument if provided, otherwise use default
-//     string romFilePath = (argc > 1) ? argv[1] : defaultRomFilePath;
-    string romFilePath = argv[1];
+     string romFilePath = (argc > 1) ? argv[1] : defaultRomFilePath;
 
     System nes = System();
 
