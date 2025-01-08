@@ -39,9 +39,9 @@ void ROMReader::parseROMHeader() {
 }
 
 void ROMReader::loadROMIntoCPU(CPU& cpu) {
+    loadTrainerIntoCPU(cpu);
     loadPRGIntoCPU(cpu);
     loadCHRIntoCPU(cpu);
-    loadTrainerIntoCPU(cpu);
 }
 
 void ROMReader::loadPRGIntoCPU(CPU& cpu) {
@@ -79,5 +79,16 @@ void ROMReader::loadPRGIntoCPU(CPU& cpu) {
 void ROMReader::loadCHRIntoCPU(CPU& cpu) {
 }
 
+/*
+  Load 512-byte trainer at memory locations $7000-$71FF.
+ */
 void ROMReader::loadTrainerIntoCPU(CPU& cpu) {
+    if (!trainerPresence) return;
+
+    uint16_t startingOffset = SIZE_HEADER;
+
+    for (int i = 0; i < 512; ++i) {
+        uint8_t val = romData.at(startingOffset + i);
+        cpu.setMemory(0x7000 + i,  val);
+    }
 }
