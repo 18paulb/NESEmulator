@@ -4,10 +4,6 @@
 
 #include "CPU/CPU.h"
 
-void CPU::incrementCounter() {
-    programCounter++;
-}
-
 template<typename T>
 void CPU::LDA(AddressingMode mode, T value) {
     // Switch based on the addressing mode

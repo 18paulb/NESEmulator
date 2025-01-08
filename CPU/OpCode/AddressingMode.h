@@ -18,6 +18,7 @@ enum AddressingMode {
     Indirect,
     IndirectX,
     IndirectY,
+    Implied,
     UNKNOWN
 };
 

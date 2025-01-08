@@ -11,11 +11,13 @@
 
 struct InstructionMetadata {
     Instruction instruction;
+    AddressingMode addressingMode;
     int byteCount;
     int cycles;
 
-    InstructionMetadata(Instruction instruction, int byteCount, int cycles) {
+    InstructionMetadata(Instruction instruction, AddressingMode addressingMode, int byteCount, int cycles) {
         this->instruction = instruction;
+        this->addressingMode = addressingMode;
         this->byteCount = byteCount;
         this->cycles = cycles;
     }

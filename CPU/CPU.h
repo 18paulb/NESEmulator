@@ -45,8 +45,6 @@ private:
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
     Memory memory;
 
-    OpcodeHelper opcodeHelper;
-
     int cycle;
 
 public:
@@ -56,7 +54,6 @@ public:
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
         cycle = 0;
         memory = Memory();
-        opcodeHelper = OpcodeHelper();
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
@@ -87,14 +84,13 @@ public:
 
         uint8_t currOpCode = getMemory(programCounter);
 
-        AddressingMode mode = opcodeHelper.getAddressingMode(currOpCode);
-
         // Next we'll need to determine which instruction type (LDA, STA, etc.) and also num of bytes and cycles
         // bytes: i.e. instruction LDY $A9 is 2 bytes, 1st byte is opcode and 2nd byte is the value to be put in memory
-        InstructionMetadata instruction = opcodeHelper.getInstructionMetadata(currOpCode);
+        InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpCode);
 
+        // Grabbing the next bytes from memory for the data
 //        cycle++;
-        programCounter++;
+        incrementPC();
     }
 
     void decodeOperand(uint8_t) {};
@@ -117,7 +113,9 @@ public:
         return accumulator;
     }
 
-    void incrementCounter();
+    void incrementPC() {
+        this->programCounter++;
+    }
 
     void setFlag(StatusFlag flag) {
         pStatus = flag;
