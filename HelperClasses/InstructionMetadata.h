@@ -5,8 +5,6 @@
 #ifndef NESEMULATOR_INSTRUCTIONMETADATA_H
 #define NESEMULATOR_INSTRUCTIONMETADATA_H
 
-#endif //NESEMULATOR_INSTRUCTIONMETADATA_H
-
 #include "CPU/OpCode/Instruction.h"
 
 struct InstructionMetadata {
@@ -29,3 +27,5 @@ struct InstructionMetadata {
         this->cycles = cycles;
     }
 };
+
+#endif //NESEMULATOR_INSTRUCTIONMETADATA_H

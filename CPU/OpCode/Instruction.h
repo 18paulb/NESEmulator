@@ -5,8 +5,6 @@
 #ifndef NESEMULATOR_INSTRUCTION_H
 #define NESEMULATOR_INSTRUCTION_H
 
-#endif //NESEMULATOR_INSTRUCTION_H
-
 enum Instruction {
     ADC, // add with carry
     AND, // and (with accumulator)
@@ -66,3 +64,5 @@ enum Instruction {
     TYA, // transfer Y to accumulator
     INVALID
 };
+
+#endif //NESEMULATOR_INSTRUCTION_H
