@@ -7,9 +7,10 @@
 
 #include <cstdint>
 #include <iostream>
+#include <utility>
 
 #include "StatusFlag.h"
-#include "AddressingMode.h"
+#include "CPU/OpCode/AddressingMode.h"
 #include "CPU/Memory/Memory.h"
 #include "System/SystemPart.h"
 #include "CPU/OpCode/OpcodeHelper.h"
@@ -88,13 +89,11 @@ public:
 
         AddressingMode mode = opcodeHelper.getAddressingMode(currOpCode);
 
-        // Next we'll need to determine which instruction type (LDA, STA, etc.)
-        Instruction instruction = opcodeHelper.getInstruction(currOpCode);
+        // Next we'll need to determine which instruction type (LDA, STA, etc.) and also num of bytes and cycles
+        // bytes: i.e. instruction LDY $A9 is 2 bytes, 1st byte is opcode and 2nd byte is the value to be put in memory
+        InstructionMetadata instruction = opcodeHelper.getInstructionMetadata(currOpCode);
 
-        // From there you need to determine the n amount of bytes after for arguments of the instruction
-
-        cycle++;
-
+//        cycle++;
         programCounter++;
     }
 

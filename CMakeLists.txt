@@ -9,7 +9,7 @@ include_directories(.)
 add_executable(NESEmulator
         CPU/CPU.cpp
         CPU/CPU.h
-        CPU/AddressingMode.h
+        CPU/OpCode/AddressingMode.h
         CPU/StatusFlag.h
         main.cpp
         tests/tests.cpp
@@ -21,7 +21,8 @@ add_executable(NESEmulator
         ROM/ROMReader.h
         CPU/OpCode/OpcodeHelper.h
         System/SystemPart.h
-        CPU/Instruction.h
+        CPU/OpCode/Instruction.h
+        HelperClasses/InstructionMetadata.h
 )
 
 # Test executable
