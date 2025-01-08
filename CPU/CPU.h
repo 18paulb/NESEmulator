@@ -84,8 +84,7 @@ public:
 
         uint8_t currOpCode = getMemory(programCounter);
 
-        // Next we'll need to determine which instruction type (LDA, STA, etc.) and also num of bytes and cycles
-        // bytes: i.e. instruction LDY $A9 is 2 bytes, 1st byte is opcode and 2nd byte is the value to be put in memory
+        // Get all metadata for instruction such as: AddressingMode, Instruction, Bytes, Cycles
         InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpCode);
 
         // Grabbing the next bytes from memory for the data

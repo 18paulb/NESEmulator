@@ -10,9 +10,16 @@
 #include "CPU/OpCode/Instruction.h"
 
 struct InstructionMetadata {
+    // The instruction type (ie LDA, LDX) these have multiple addressing modes
     Instruction instruction;
+
+    // Type of addressing mode (ie Immediate, ZeroPage), basically how it accesses memory
     AddressingMode addressingMode;
+
+    // Number of bytes that the instruction uses in memory
     int byteCount;
+
+    // Number of cycles it takes to execute
     int cycles;
 
     InstructionMetadata(Instruction instruction, AddressingMode addressingMode, int byteCount, int cycles) {
