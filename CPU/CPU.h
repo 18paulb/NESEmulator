@@ -7,7 +7,6 @@
 
 #include <cstdint>
 #include <iostream>
-#include <utility>
 
 #include "StatusFlag.h"
 #include "CPU/OpCode/AddressingMode.h"
@@ -18,8 +17,8 @@
 using namespace std;
 
 class CPU : public SystemPart {
+public:
 private:
-
     // 16-bit register which points to the next instruction to be executed
     uint16_t programCounter;
 
@@ -81,14 +80,32 @@ public:
     }
 
     void executeInstruction() {
-
         uint8_t currOpCode = getMemory(programCounter);
 
         // Get all metadata for instruction such as: AddressingMode, Instruction, Bytes, Cycles
         InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpCode);
 
+        if (instruction.instruction == Instruction::INVALID || instruction.addressingMode == AddressingMode::UNKNOWN) {
+            cerr << "Error reading instruction" << endl;
+        }
+
+        // Grab the data from the following bytes depending on instruction
+        // With all official opcodes (not counting unofficial) there is max 3 bytes
+        if (instruction.byteCount == 2) {
+            uint8_t val = getMemory(programCounter+1);
+            delegateInstructionExecution(instruction, val);
+        }
+        else if (instruction.byteCount == 3) {
+            uint8_t lowByte = getMemory(programCounter+1);
+            uint8_t highByte = getMemory(programCounter+2);
+            // Combine the two bytes together using bit shifting
+            uint16_t val = (highByte << 8) | lowByte;
+
+            delegateInstructionExecution(instruction, val);
+        }
+
         // Grabbing the next bytes from memory for the data
-//        cycle++;
+        // cycle++;
         incrementPC();
     }
 
@@ -121,7 +138,10 @@ public:
     }
 
     template<typename T>
-    void LDA(AddressingMode, T);
+    void delegateInstructionExecution(InstructionMetadata, T);
+
+    template<typename T>
+    void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
     void LDA_Immediate(uint8_t);
@@ -148,7 +168,7 @@ public:
     void LDA_IndirectY(uint8_t);
 
     template<typename T>
-    void LDX(AddressingMode, T);
+    void executeLDX(AddressingMode, T);
 
     // Load X Register - opcode $A2
     void LDX_Immediate(uint8_t);
@@ -166,7 +186,7 @@ public:
     void LDX_AbsoluteY(uint16_t);
 
     template<typename T>
-    void LDY(AddressingMode, T);
+    void executeLDY(AddressingMode, T);
 
     // Load Y Register - opcode $A0
     void LDY_Immediate(uint8_t);
@@ -184,7 +204,7 @@ public:
     void LDY_AbsoluteX(uint16_t);
 
     template<typename T>
-    void STA(AddressingMode, T);
+    void executeSTA(AddressingMode, T);
 
     // Store Accumulator - opcode $85
     void STA_ZeroPage(uint8_t);
@@ -208,7 +228,7 @@ public:
     void STA_IndirectY(uint8_t);
 
     template<typename T>
-    void STX(AddressingMode, T);
+    void executeSTX(AddressingMode, T);
 
     // Store X Register - opcode $86
     void STX_ZeroPage(uint8_t);
@@ -220,7 +240,7 @@ public:
     void STX_Absolute(uint16_t);
 
     template<typename T>
-    void STY(AddressingMode, T);
+    void executeSTY(AddressingMode, T);
 
     // Store Y Register - opcode $84
     void STY_ZeroPage(uint8_t);

@@ -5,7 +5,194 @@
 #include "CPU/CPU.h"
 
 template<typename T>
-void CPU::LDA(AddressingMode mode, T value) {
+void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value) {
+    Instruction instructionType = instruction.instruction;
+    AddressingMode addressingMode = instruction.addressingMode;
+    switch (instructionType) {
+
+        case ADC:
+            break;
+
+        case AND:
+            break;
+
+        case ASL:
+            break;
+
+        case BCC:
+            break;
+
+        case BCS:
+            break;
+
+        case BEQ:
+            break;
+
+        case BIT:
+            break;
+
+        case BMI:
+            break;
+
+        case BNE:
+            break;
+
+        case BPL:
+            break;
+
+        case BRK:
+            break;
+
+        case BVC:
+            break;
+
+        case BVS:
+            break;
+
+        case CLC:
+            break;
+
+        case CLD:
+            break;
+
+        case CLI:
+            break;
+
+        case CLV:
+            break;
+
+        case CMP:
+            break;
+
+        case CPX:
+            break;
+
+        case CPY:
+            break;
+
+        case DEC:
+            break;
+
+        case DEX:
+            break;
+
+        case DEY:
+            break;
+
+        case EOR:
+            break;
+
+        case INC:
+            break;
+
+        case INX:
+            break;
+
+        case INY:
+            break;
+
+        case JMP:
+            break;
+
+        case JSR:
+            break;
+
+        case LDA:
+            executeLDA(addressingMode, value);
+            break;
+
+        case LDX:
+            executeLDX(addressingMode, value);
+            break;
+
+        case LDY:
+            executeLDY(addressingMode, value);
+            break;
+
+        case LSR:
+            break;
+
+        case NOP:
+            break;
+
+        case ORA:
+            break;
+
+        case PHA:
+            break;
+
+        case PHP:
+            break;
+
+        case PLA:
+            break;
+
+        case PLP:
+            break;
+
+        case ROL:
+            break;
+
+        case ROR:
+            break;
+
+        case RTI:
+            break;
+
+        case RTS:
+            break;
+
+        case SBC:
+            break;
+
+        case SEC:
+            break;
+
+        case SED:
+            break;
+
+        case SEI:
+            break;
+
+        case STA:
+            executeSTA(addressingMode, value);
+            break;
+
+        case STX:
+            executeSTX(addressingMode, value);
+            break;
+
+        case STY:
+            executeSTY(addressingMode, value);
+            break;
+
+        case TAX:
+            break;
+
+        case TAY:
+            break;
+        case TSX:
+            break;
+
+        case TXA:
+            break;
+
+        case TXS:
+            break;
+
+        case TYA:
+            break;
+
+        default:
+            cout << "Invalid" << endl;
+    }
+}
+
+template void CPU::delegateInstructionExecution<uint8_t>(InstructionMetadata, uint8_t);
+template void CPU::delegateInstructionExecution<uint16_t>(InstructionMetadata, uint16_t);
+
+template<typename T>
+void CPU::executeLDA(AddressingMode mode, T value) {
     // Switch based on the addressing mode
     switch (mode) {
         case Immediate:
@@ -111,7 +298,7 @@ void CPU::LDA_IndirectY(uint8_t address) {
 }
 
 template<typename T>
-void CPU::LDX(AddressingMode mode, T value) {
+void CPU::executeLDX(AddressingMode mode, T value) {
     switch (mode) {
         case Immediate:
             LDX_Immediate(static_cast<uint8_t>(value));
@@ -173,7 +360,7 @@ void CPU::LDX_AbsoluteY(uint16_t address) {
 }
 
 template<typename T>
-void CPU::LDY(AddressingMode mode, T value) {
+void CPU::executeLDY(AddressingMode mode, T value) {
     switch (mode) {
         case Immediate:
             LDY_Immediate(static_cast<uint8_t>(value));
@@ -236,7 +423,7 @@ void CPU::LDY_AbsoluteX(uint16_t address) {
 }
 
 template<typename T>
-void CPU::STA(AddressingMode mode, T value) {
+void CPU::executeSTA(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STA_ZeroPage(static_cast<uint8_t>(value));
@@ -323,7 +510,7 @@ void CPU::STA_IndirectY(uint8_t address) {
 
 
 template<typename T>
-void CPU::STX(AddressingMode mode, T value) {
+void CPU::executeSTX(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STX_ZeroPage(static_cast<uint8_t>(value));
@@ -358,7 +545,7 @@ void CPU::STX_Absolute(uint16_t address) {
 
 
 template<typename T>
-void CPU::STY(AddressingMode mode, T value) {
+void CPU::executeSTY(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STY_ZeroPage(static_cast<uint8_t>(value));
