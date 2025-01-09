@@ -16,7 +16,7 @@
 
 using namespace std;
 
-class CPU : public SystemPart {
+class CPU final : public SystemPart {
 public:
 private:
     // 16-bit register which points to the next instruction to be executed
@@ -62,7 +62,7 @@ public:
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
         // IMPORTANT: When pushing to stack make sure to add offset of $0100
-        stackPointer = 0x00;
+        stackPointer = 0x0100;
     }
 
     void initializeProgramCounter() {
@@ -256,6 +256,8 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
+
+    void executeBRK();
 
 };
 

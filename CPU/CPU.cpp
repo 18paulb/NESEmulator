@@ -435,29 +435,26 @@ void CPU::executeSTA(AddressingMode mode, T value) {
 }
 
 void CPU::STA_ZeroPage(uint8_t address) {
-    memory.setMemory(address, accumulator);
+    memory[address] = accumulator;
 }
 
 void CPU::STA_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
-
-    memory.setMemory(newAddress, accumulator);
+    memory[newAddress] = accumulator;
 }
 
 void CPU::STA_Absolute(uint16_t address) {
-    memory.setMemory(address, accumulator);
+    memory[address] = accumulator;
 }
 
 void CPU::STA_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
-
-    memory.setMemory(newAddress, accumulator);
+    memory[newAddress] = accumulator;
 }
 
 void CPU::STA_AbsoluteY(uint16_t address) {
     uint16_t newAddress = address + yRegister;
-
-    memory.setMemory(newAddress, accumulator);
+    memory[newAddress] = accumulator;
 }
 
 void CPU::STA_IndirectX(uint8_t address) {
@@ -470,7 +467,7 @@ void CPU::STA_IndirectX(uint8_t address) {
     // Combine the low and high bytes to form a 16-bit target address
     uint16_t targetAddress = (highByte << 8) | lowByte;
 
-    memory.setMemory(targetAddress, accumulator);
+    memory[targetAddress] = accumulator;
 }
 
 void CPU::STA_IndirectY(uint8_t address) {
@@ -481,7 +478,7 @@ void CPU::STA_IndirectY(uint8_t address) {
 
     targetAddress += yRegister;
 
-    memory.setMemory(targetAddress, accumulator);
+    memory[targetAddress] = accumulator;
 }
 
 
@@ -549,5 +546,8 @@ void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
 }
 
+void CPU::executeBRK() {
+    
+}
 
 
