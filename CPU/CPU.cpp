@@ -197,35 +197,27 @@ void CPU::executeLDA(AddressingMode mode, T value) {
     switch (mode) {
         case Immediate:
             LDA_Immediate(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPage:
             LDA_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageX:
             LDA_ZeroPageX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case IndirectX:
             LDA_IndirectX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case IndirectY:
             LDA_IndirectY(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             LDA_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteX:
             LDA_AbsoluteX(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteY:
             LDA_AbsoluteY(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         default:
             cout << "Error with LDA type" << endl;
@@ -302,23 +294,18 @@ void CPU::executeLDX(AddressingMode mode, T value) {
     switch (mode) {
         case Immediate:
             LDX_Immediate(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPage:
             LDX_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageY:
             LDX_ZeroPageY(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             LDX_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteY:
             LDX_AbsoluteY(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         default:
             cout << "Error with LDX type" << endl;
@@ -364,23 +351,18 @@ void CPU::executeLDY(AddressingMode mode, T value) {
     switch (mode) {
         case Immediate:
             LDY_Immediate(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPage:
             LDY_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageX:
             LDY_ZeroPageX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             LDY_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteX:
             LDY_AbsoluteX(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         default:
             cout << "Error with LDY type" << endl;
@@ -427,31 +409,24 @@ void CPU::executeSTA(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STA_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageX:
             STA_ZeroPageX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             STA_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteX:
             STA_AbsoluteX(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case AbsoluteY:
             STA_AbsoluteY(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         case IndirectX:
             STA_IndirectX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case IndirectY:
             STA_IndirectY(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         default:
             cout << "Error with STA type" << endl;
@@ -514,15 +489,12 @@ void CPU::executeSTX(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STX_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageY:
             STX_ZeroPageY(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             STX_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         default:
             cout << "Error with STX type" << endl;
@@ -549,15 +521,12 @@ void CPU::executeSTY(AddressingMode mode, T value) {
     switch (mode) {
         case ZeroPage:
             STY_ZeroPage(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case ZeroPageX:
             STY_ZeroPageX(static_cast<uint8_t>(value));
-            programCounter += 2;
             break;
         case Absolute:
             STY_Absolute(static_cast<uint16_t>(value));
-            programCounter += 3;
             break;
         default:
             cout << "Error with STY type" << endl;

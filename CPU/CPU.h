@@ -104,6 +104,9 @@ public:
             delegateInstructionExecution(instruction, val);
         }
 
+        // Increment the program counter by the byteCount of the instruction so that it goes to next instruction
+        programCounter += instruction.byteCount;
+
         // Grabbing the next bytes from memory for the data
         // cycle++;
         incrementPC();
