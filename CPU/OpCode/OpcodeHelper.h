@@ -16,7 +16,7 @@ public:
     static InstructionMetadata getInstructionMetadata(const uint8_t& opcode) {
         switch (opcode) {
             // ADC
-                case 0x69: return {Instruction::ADC, AddressingMode::Immediate, 2, 2};
+            case 0x69: return {Instruction::ADC, AddressingMode::Immediate, 2, 2};
             case 0x65: return {Instruction::ADC, AddressingMode::ZeroPage,2, 3};
             case 0x75: return {Instruction::ADC, AddressingMode::ZeroPageX, 2, 4};
             case 0x6D: return {Instruction::ADC, AddressingMode::Absolute, 3, 4};
@@ -65,7 +65,8 @@ public:
             case 0x10: return {Instruction::BPL, AddressingMode::Relative, 2, 2};
 
             // BRK
-            case 0x00: return {Instruction::BRK, AddressingMode::Implied ,1, 7};
+            // TODO: Make sure this is right but from documentation it looks like it is treated as a 2 byte instruction
+            case 0x00: return {Instruction::BRK, AddressingMode::Implied ,1 + 1, 7};
 
             // BVC
             case 0x50: return {Instruction::BVC, AddressingMode::Relative,2, 2};
