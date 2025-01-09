@@ -7,10 +7,7 @@
 
 #include "CPU/CPU.h"
 #include "ROM/ROMReader.h"
-#include <string>
-#include <fstream>
-#include <filesystem>
-#include <vector>
+
 
 class System {
 private:

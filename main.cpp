@@ -8,10 +8,10 @@ using namespace std;
 #include <vector>
 #include "System/System.h"
 
-int main(int argc, char *argv[]) {
+int main(const int argc, char *argv[]) {
 
     // Default ROM file path
-     string defaultRomFilePath = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/other/balloonfight.nes";
+     const string defaultRomFilePath = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/other/balloonfight.nes";
 
     // Use command line argument if provided, otherwise use default
      string romFilePath = (argc > 1) ? argv[1] : defaultRomFilePath;

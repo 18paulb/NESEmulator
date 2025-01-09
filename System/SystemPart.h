@@ -7,6 +7,8 @@
 
 class SystemPart {
 public:
+    virtual ~SystemPart() = default;
+
     virtual void step_to(int newCount) = 0;
 };
 #endif //NESEMULATOR_SYSTEMPART_H

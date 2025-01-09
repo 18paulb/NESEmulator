@@ -42,7 +42,7 @@ private:
     uint8_t yRegister;
 
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
-    Memory memory;
+    Memory memory = Memory();
 
     int cycle;
 
@@ -52,7 +52,12 @@ public:
         // This is the reset vector, and it should give the starting location of the PC
         // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
         cycle = 0;
-        memory = Memory();
+
+        accumulator = 0;
+        xRegister = 0;
+        yRegister = 0;
+        programCounter = 0;
+        pStatus = StatusFlag();
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
@@ -80,10 +85,10 @@ public:
     }
 
     void executeInstruction() {
-        uint8_t currOpCode = getMemory(programCounter);
+        const uint8_t currOpcode = getMemory(programCounter);
 
         // Get all metadata for instruction such as: AddressingMode, Instruction, Bytes, Cycles
-        InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpCode);
+        const InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpcode);
 
         if (instruction.instruction == Instruction::INVALID || instruction.addressingMode == AddressingMode::UNKNOWN) {
             cerr << "Error reading instruction" << endl;
@@ -92,14 +97,14 @@ public:
         // Grab the data from the following bytes depending on instruction
         // With all official opcodes (not counting unofficial) there is max 3 bytes
         if (instruction.byteCount == 2) {
-            uint8_t val = getMemory(programCounter+1);
+            const uint8_t val = getMemory(programCounter+1);
             delegateInstructionExecution(instruction, val);
         }
         else if (instruction.byteCount == 3) {
-            uint8_t lowByte = getMemory(programCounter+1);
-            uint8_t highByte = getMemory(programCounter+2);
+            const uint8_t lowByte = getMemory(programCounter+1);
+            const uint8_t highByte = getMemory(programCounter+2);
             // Combine the two bytes together using bit shifting
-            uint16_t val = (highByte << 8) | lowByte;
+            const uint16_t val = (highByte << 8) | lowByte;
 
             delegateInstructionExecution(instruction, val);
         }
@@ -112,23 +117,21 @@ public:
         incrementPC();
     }
 
-    void decodeOperand(uint8_t) {};
-
     void step_to(int newCount) override {
         while (cycle < newCount) {
             executeInstruction();
         }
     }
 
-    uint8_t getXRegister() {
+    uint8_t getXRegister() const {
         return xRegister;
     }
 
-    uint8_t getYRegister() {
+    uint8_t getYRegister() const {
         return yRegister;
     }
 
-    uint8_t getAccumulator() {
+    uint8_t getAccumulator() const {
         return accumulator;
     }
 

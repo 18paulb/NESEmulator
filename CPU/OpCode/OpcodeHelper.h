@@ -13,7 +13,7 @@
 class OpcodeHelper {
 public:
     // FIXME: Honestly this could probably just be a lookup table, it would probably be more efficient
-    static InstructionMetadata getInstructionMetadata(uint8_t opcode) {
+    static InstructionMetadata getInstructionMetadata(const uint8_t& opcode) {
         switch (opcode) {
             // ADC
                 case 0x69: return {Instruction::ADC, AddressingMode::Immediate, 2, 2};

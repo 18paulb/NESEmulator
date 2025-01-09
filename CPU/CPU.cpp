@@ -171,6 +171,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case TAY:
             break;
+
         case TSX:
             break;
 
