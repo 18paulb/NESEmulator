@@ -40,8 +40,7 @@ private:
     */
     uint8_t stackPointer;
 
-
-    //Processor Status
+    // Processor Status
     // Each bit in the uint8_t is a separate flag
     uint8_t pStatus;
 
