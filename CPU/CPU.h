@@ -26,6 +26,8 @@ using namespace std;
 #define FLAG_V (1 << 6)    // Overflow
 #define FLAG_N (1 << 7)    // Negative
 
+#define BIT_7 0x80
+
 class CPU final : public SystemPart {
 public:
 private:
@@ -109,7 +111,8 @@ public:
         // With all official opcodes (not counting unofficial) there is max 3 bytes
         if (instruction.byteCount == 1) {
             // Don't pass in a value, default 0.
-            delegateInstructionExecution(instruction, 0);
+            uint8_t placeholder = 0;
+            delegateInstructionExecution(instruction, placeholder);
         }
         else if (instruction.byteCount == 2) {
             const uint8_t val = getMemory(programCounter+1);
@@ -217,6 +220,35 @@ public:
                 pStatus &= ~FLAG_N;
                 break;
             default:
+                cerr << "Unknown flag " << flag << endl;
+        }
+    }
+
+    bool checkFlag(StatusFlag flag) const {
+        switch (flag) {
+            case Carry:
+                return pStatus & FLAG_C;
+
+            case Zero:
+                return pStatus & FLAG_Z;
+
+            case InterruptDisable:
+                return pStatus & FLAG_I;
+
+            case Break:
+                return pStatus & FLAG_B;
+
+            case Decimal:
+                return pStatus & FLAG_D;
+
+            case Overflow:
+                return pStatus & FLAG_V;
+
+            case Negative:
+                return pStatus & FLAG_N;
+
+            default:
+                return false;
                 cerr << "Unknown flag " << flag << endl;
         }
     }
@@ -336,6 +368,8 @@ public:
     void STY_Absolute(uint16_t);
 
     void executeBRK();
+
+    void executeBPL();
 
 };
 

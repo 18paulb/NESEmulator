@@ -39,6 +39,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case BPL:
+            executeBPL();
             break;
 
         // Doesn't increment PC, sets value during execution
@@ -239,7 +240,7 @@ void CPU::executeLDA(AddressingMode mode, T value) {
     }
 
     // if bit 7 of accumulator is set
-    if (accumulator & 0x80) {
+    if (accumulator & BIT_7) {
         setFlag(StatusFlag::Negative);
     }
 }
@@ -327,7 +328,7 @@ void CPU::executeLDX(AddressingMode mode, T value) {
     }
 
     // if bit 7 of accumulator is set
-    if (xRegister & 0x80) {
+    if (xRegister & BIT_7) {
         setFlag(StatusFlag::Negative);
     }
 }
@@ -384,7 +385,7 @@ void CPU::executeLDY(AddressingMode mode, T value) {
     }
 
     // if bit 7 of accumulator is set
-    if (yRegister & 0x80) {
+    if (yRegister & BIT_7) {
         setFlag(StatusFlag::Negative);
     }
 }
@@ -595,6 +596,10 @@ void CPU::executeBRK() {
     uint16_t val = (highByte << 8) | lowByte;
 
     programCounter = val;
+}
+
+void CPU::executeBPL() {
+
 }
 
 
