@@ -33,10 +33,9 @@ private:
     uint16_t programCounter;
 
     /*
-    The Stack Pointer is an 8-bit register
-    which serves as an offset from $0100. The stack works top-down, so when a byte is pushed
-    on to the stack, the stack pointer is decremented and when a byte is pulled from the stack,
-    the stack pointer is incremented.
+    The Stack Pointer is an 8-bit register is offset from $0100.
+    The stack works top-down, so when a byte is pushed on to the stack, the stack pointer is decremented
+    and when a byte is pulled from the stack, the stack pointer is incremented.
     */
     uint8_t stackPointer;
 
@@ -70,7 +69,6 @@ public:
         pStatus = 0;
 
         // FROM NES docs:
-        // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
         // IMPORTANT: When pushing to stack make sure to add offset of $0100.
         // We could just make the stack a 16-bit number however making it 8-bit is more faithful to the hardware. We add the offset because
         // The addresses of the stack can't fit into an 8-bit number
@@ -109,7 +107,11 @@ public:
 
         // Grab the data from the following bytes depending on instruction
         // With all official opcodes (not counting unofficial) there is max 3 bytes
-        if (instruction.byteCount == 2) {
+        if (instruction.byteCount == 1) {
+            // Don't pass in a value, default 0.
+            delegateInstructionExecution(instruction, 0);
+        }
+        else if (instruction.byteCount == 2) {
             const uint8_t val = getMemory(programCounter+1);
             delegateInstructionExecution(instruction, val);
         }
@@ -122,13 +124,9 @@ public:
             delegateInstructionExecution(instruction, val);
         }
 
-        // Increment the program counter by the byteCount of the instruction so that it goes to next instruction
-        // FIXME: Some instructions don't automatically update programCounter, so I might need to change this
-        programCounter += instruction.byteCount;
-
         // Grabbing the next bytes from memory for the data
         // cycle++;
-        incrementPC();
+
     }
 
     void step_to(int newCount) override {
@@ -149,8 +147,12 @@ public:
         return accumulator;
     }
 
-    void incrementPC() {
-        this->programCounter++;
+    void pushToStack(uint8_t value) {
+        memory[STACK_POINTER_OFFSET + stackPointer--] = value;
+    }
+
+    uint8_t popFromStack() {
+        return memory[STACK_POINTER_OFFSET + stackPointer++];
     }
 
     /*

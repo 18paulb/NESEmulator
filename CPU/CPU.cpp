@@ -4,6 +4,7 @@
 
 #include "CPU/CPU.h"
 
+// Manually increment PC during cases to add more control to PC since some instructions don't increment
 template<typename T>
 void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value) {
     Instruction instructionType = instruction.instruction;
@@ -40,7 +41,9 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
         case BPL:
             break;
 
+        // Doesn't increment PC, sets value during execution
         case BRK:
+            executeBRK();
             break;
 
         case BVC:
@@ -99,14 +102,17 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case LDA:
             executeLDA(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case LDX:
             executeLDX(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case LDY:
             executeLDY(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case LSR:
@@ -156,14 +162,17 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case STA:
             executeSTA(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case STX:
             executeSTX(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case STY:
             executeSTY(addressingMode, value);
+            programCounter += instruction.byteCount;
             break;
 
         case TAX:
@@ -563,13 +572,11 @@ void CPU::executeBRK() {
     uint8_t highByte = (pcPlusTwo >> 8) & 0xFF;
     uint8_t lowByte = pcPlusTwo & 0xFF;
 
-    // Push high byte first
-    setMemory(STACK_POINTER_OFFSET + stackPointer, highByte);
-    stackPointer--;
+    // Push high byte first (due to 6502 being little-endian)
+    pushToStack(highByte);
 
     // Then push low byte
-    setMemory(STACK_POINTER_OFFSET + stackPointer, lowByte);
-    stackPointer--;
+    pushToStack(lowByte);
 
     // 2.
     uint8_t tmpPStatus = pStatus;
@@ -588,8 +595,6 @@ void CPU::executeBRK() {
     uint16_t val = (highByte << 8) | lowByte;
 
     programCounter = val;
-
-
 }
 
 

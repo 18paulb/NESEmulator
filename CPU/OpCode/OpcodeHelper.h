@@ -65,8 +65,8 @@ public:
             case 0x10: return {Instruction::BPL, AddressingMode::Relative, 2, 2};
 
             // BRK
-            // TODO: Make sure this is right but from documentation it looks like it is treated as a 2 byte instruction
-            case 0x00: return {Instruction::BRK, AddressingMode::Implied ,1 + 1, 7};
+            // Special case, even though it is 1 byte, it is treated as a 2 byte instruction
+            case 0x00: return {Instruction::BRK, AddressingMode::Implied ,1, 7};
 
             // BVC
             case 0x50: return {Instruction::BVC, AddressingMode::Relative,2, 2};
