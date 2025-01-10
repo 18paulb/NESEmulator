@@ -1,0 +1,30 @@
+The status registers is stored as a uint8_t. This is how the bits correspond:
+
+N V - B D I Z C
+7 6 5 4 3 2 1 0
+
+NOTE: Bit 5 is not used
+
+EXPLANATIONS OF STATUS FLAGS
+
+Carry (C) - Set if last instruction resulted in overflow from bit 8 or underflow with bit 0'
+
+Zero (Z) - Set if result of last instruction was a 0
+
+Interrupt Disable (I) - Set to prevent system interrupts
+
+Break (B) - Set when a BRK instruction has been executed
+
+Decimal (D) - Set to switch the 6502 into BCD mode
+
+Overflow (V) - Set if an invalid two's complement results was obtained by the previous instruction.
+               This means that a negative result has been obtained when a positive one was expected or vice versa.
+
+Negative (N) - Bit 7 of a byte represents the sign of that byte, with 0 being positive and 1 being negative
+
+
+Then you can manipulate flags like this:
+Set a flag:
+    status |= STATUS_Z;    // Set Zero flag
+Clear a flag:
+    status &= ~STATUS_C;   // Clear Carry flag

@@ -5,7 +5,6 @@
 #ifndef NESEMULATOR_STATUSFLAGS_H
 #define NESEMULATOR_STATUSFLAGS_H
 
-// In instructions, you'll see something like "N V - B D I Z C", This is showing what flags are set
 enum StatusFlag {
     // (C) Set if last instruction resulted in overflow from bit 8 or underflow with bit 0
     Carry,

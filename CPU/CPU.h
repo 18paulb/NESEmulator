@@ -16,6 +16,16 @@
 
 using namespace std;
 
+#define STACK_POINTER_OFFSET 0x0100
+
+#define FLAG_C (1 << 0)    // Carry
+#define FLAG_Z (1 << 1)    // Zero
+#define FLAG_I (1 << 2)    // Interrupt Disable
+#define FLAG_D (1 << 3)    // Decimal
+#define FLAG_B (1 << 4)    // Break
+#define FLAG_V (1 << 6)    // Overflow
+#define FLAG_N (1 << 7)    // Negative
+
 class CPU final : public SystemPart {
 public:
 private:
@@ -23,7 +33,7 @@ private:
     uint16_t programCounter;
 
     /*
-    The stack pointer is an 8-bit register
+    The Stack Pointer is an 8-bit register
     which serves as an offset from $0100. The stack works top-down, so when a byte is pushed
     on to the stack, the stack pointer is decremented and when a byte is pulled from the stack,
     the stack pointer is incremented.
@@ -31,8 +41,8 @@ private:
     uint8_t stackPointer;
 
     // Processor Status
-    // Composed of six one-bit registers, but we are representing as an enumerator
-    StatusFlag pStatus;
+    // Each bit in the uint8_t is a separate flag
+    uint8_t pStatus;
 
     // This performs arithmetic operations
     uint8_t accumulator;
@@ -57,12 +67,15 @@ public:
         xRegister = 0;
         yRegister = 0;
         programCounter = 0;
-        pStatus = StatusFlag();
+        pStatus = 0;
 
         // FROM NES docs:
         // The stack is located at memory locations $0100-$01FF. The stack pointer is an 8-bit register which serves as an offset from $0100.
-        // IMPORTANT: When pushing to stack make sure to add offset of $0100
-        stackPointer = 0x0100;
+        // IMPORTANT: When pushing to stack make sure to add offset of $0100.
+        // We could just make the stack a 16-bit number however making it 8-bit is more faithful to the hardware. We add the offset because
+        // The addresses of the stack can't fit into an 8-bit number
+        // Stack should be initialized to 0xFF because it grows top down, when pushing you decrement, when pulling you increment
+        stackPointer = 0xFF;
     }
 
     void initializeProgramCounter() {
@@ -110,6 +123,7 @@ public:
         }
 
         // Increment the program counter by the byteCount of the instruction so that it goes to next instruction
+        // FIXME: Some instructions don't automatically update programCounter, so I might need to change this
         programCounter += instruction.byteCount;
 
         // Grabbing the next bytes from memory for the data
@@ -139,8 +153,70 @@ public:
         this->programCounter++;
     }
 
+    /*
+    Manipulate flags like this:
+    Set a flag:
+        status |= STATUS_Z;    // Set Zero flag
+    */
     void setFlag(StatusFlag flag) {
-        pStatus = flag;
+        switch (flag) {
+            case Carry:
+                pStatus |= FLAG_C;
+                break;
+            case Zero:
+                pStatus |= FLAG_Z;
+                break;
+            case InterruptDisable:
+                pStatus |= FLAG_I;
+                break;
+            case Break:
+                pStatus |= FLAG_B;
+                break;
+            case Decimal:
+                pStatus |= FLAG_D;
+                break;
+            case Overflow:
+                pStatus |= FLAG_V;
+                break;
+            case Negative:
+                pStatus |= FLAG_N;
+                break;
+            default:
+                cerr << "Unknown flag " << flag << endl;
+        }
+    }
+
+    /*
+    Manipulate flags like this:
+    Clear a flag:
+        status &= ~STATUS_C;   // Clear Carry flag
+    */
+    void clearFlag(StatusFlag flag) {
+        switch (flag) {
+            case Carry:
+                pStatus &= ~FLAG_C;
+                break;
+            case Zero:
+                pStatus &= ~FLAG_Z;
+                break;
+            case InterruptDisable:
+                pStatus &= ~FLAG_I;
+                break;
+            case Break:
+                pStatus &= ~FLAG_B;
+                break;
+            case Decimal:
+                pStatus &= ~FLAG_D;
+                break;
+            case Overflow:
+                pStatus &= ~FLAG_V;
+                break;
+            case Negative:
+                pStatus &= ~FLAG_N;
+                break;
+            default:
+                cerr << "Unknown flag " << flag << endl;
+        }
     }
 
     template<typename T>
