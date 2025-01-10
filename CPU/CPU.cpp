@@ -237,11 +237,15 @@ void CPU::executeLDA(AddressingMode mode, T value) {
     // Set Flags
     if (accumulator == 0) {
         setFlag(StatusFlag::Zero);
+    } else {
+        clearFlag(StatusFlag::Zero);
     }
 
     // if bit 7 of accumulator is set
     if (accumulator & BIT_7) {
         setFlag(StatusFlag::Negative);
+    } else {
+        clearFlag(StatusFlag::Negative);
     }
 }
 
@@ -325,11 +329,15 @@ void CPU::executeLDX(AddressingMode mode, T value) {
     // Set Flags
     if (xRegister == 0) {
         setFlag(StatusFlag::Zero);
+    } else {
+        clearFlag(StatusFlag::Zero);
     }
 
     // if bit 7 of accumulator is set
     if (xRegister & BIT_7) {
         setFlag(StatusFlag::Negative);
+    } else {
+        clearFlag(StatusFlag::Negative);
     }
 }
 
@@ -382,11 +390,15 @@ void CPU::executeLDY(AddressingMode mode, T value) {
     // Set Flags
     if (yRegister == 0) {
         setFlag(StatusFlag::Zero);
+    } else {
+        clearFlag(StatusFlag::Zero);
     }
 
     // if bit 7 of accumulator is set
     if (yRegister & BIT_7) {
         setFlag(StatusFlag::Negative);
+    } else {
+        clearFlag(StatusFlag::Negative);
     }
 }
 
