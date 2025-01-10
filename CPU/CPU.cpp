@@ -546,11 +546,13 @@ void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
 }
 
+// FIXME: Warning: I've seen different things for the necessity of step 3-4 so if bugs happen, it could be that
 /*
  Three things happen during the BRK instruction
  1. The PC+2 is pushed to the stack
- 2. The status register will be pushed to the stack with the break flag set to 1.
- 3. TODO: POSSIBLY set the interrupt flag
+ 2. A copy of the status register will be pushed to the stack with the break flag set to 1.
+ 3. Set the interrupt flag on the status register,
+ 4. Set PC to 0xFFFE 0xFFFF
 */
 void CPU::executeBRK() {
     // 1.
@@ -570,11 +572,22 @@ void CPU::executeBRK() {
     stackPointer--;
 
     // 2.
-    // TODO: Before pushing, figure out what flag to set
-    setMemory(STACK_POINTER_OFFSET + stackPointer, pStatus);
+    uint8_t tmpPStatus = pStatus;
+    // Manually do the bitwise operation here so that the original pStatus is not altered
+    tmpPStatus |= FLAG_B;
+    setMemory(STACK_POINTER_OFFSET + stackPointer, tmpPStatus);
     stackPointer--;
 
     // 3.
+    setFlag(StatusFlag::InterruptDisable);
+
+    // 4.
+    lowByte = memory[0xFFFE];
+    highByte = memory[0xFFFD];
+    // Combine the two bytes together using bit shifting
+    uint16_t val = (highByte << 8) | lowByte;
+
+    programCounter = val;
 
 
 }
