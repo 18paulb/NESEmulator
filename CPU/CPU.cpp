@@ -56,6 +56,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case CLC:
+            executeCLC();
+            programCounter += instruction.byteCount;
             break;
 
         case CLD:
@@ -64,9 +66,13 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case CLI:
+            executeCLI();
+            programCounter += instruction.byteCount;
             break;
 
         case CLV:
+            executeCLV();
+            programCounter += instruction.byteCount;
             break;
 
         case CMP:
@@ -82,6 +88,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case DEX:
+            executeDEX();
+            programCounter += instruction.byteCount;
             break;
 
         case DEY:
@@ -96,9 +104,13 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case INX:
+            executeINX();
+            programCounter += instruction.byteCount;
             break;
 
         case INY:
+            executeINY();
+            programCounter += instruction.byteCount;
             break;
 
         case JMP:
@@ -126,12 +138,16 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case NOP:
+            // No instruction, used to waste CPU cycles
+            programCounter += instruction.byteCount;
             break;
 
         case ORA:
             break;
 
         case PHA:
+            executePHA();
+            programCounter += instruction.byteCount;
             break;
 
         case PHP:
@@ -159,9 +175,13 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case SEC:
+            executeSEC();
+            programCounter += instruction.byteCount;
             break;
 
         case SED:
+            executeSED();
+            programCounter += instruction.byteCount;
             break;
 
         case SEI:
@@ -185,15 +205,23 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case TAX:
+            executeTAX();
+            programCounter += instruction.byteCount;
             break;
 
         case TAY:
+            executeTAY();
+            programCounter += instruction.byteCount;
             break;
 
         case TSX:
+            executeTSX();
+            programCounter += instruction.byteCount;
             break;
 
         case TXA:
+            executeTXA();
+            programCounter += instruction.byteCount;
             break;
 
         case TXS:
@@ -202,6 +230,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case TYA:
+            executeTYA();
+            programCounter += instruction.byteCount;
             break;
 
         default:
@@ -632,12 +662,20 @@ void CPU::executeSEI() {
     setFlag(StatusFlag::InterruptDisable);
 }
 
+void CPU::executeCLC() {
+    clearFlag(StatusFlag::Carry);
+}
+
 void CPU::executeCLD() {
     clearFlag(StatusFlag::Decimal);
 }
 
-void CPU::executeTXS() {
-    stackPointer = xRegister;
+void CPU::executeCLI() {
+    clearFlag(StatusFlag::InterruptDisable);
+}
+
+void CPU::executeCLV() {
+    clearFlag(StatusFlag::Overflow);
 }
 
 void CPU::executeDEY() {
@@ -649,6 +687,104 @@ void CPU::executeDEY() {
     // if bit 7 of accumulator is set
     yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
 }
+
+void CPU::executeDEX() {
+    xRegister -= 1;
+
+    // If value is 0
+    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeINX() {
+    xRegister += 1;
+
+    // If value is 0
+    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeINY() {
+    yRegister += 1;
+
+    // If value is 0
+    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executePHA() {
+    pushToStack(accumulator);
+}
+
+void CPU::executeSEC() {
+    setFlag(StatusFlag::Carry);
+}
+
+void CPU::executeSED() {
+    setFlag(StatusFlag::Decimal);
+}
+
+void CPU::executeTAX() {
+    xRegister = accumulator;
+
+    // If value is 0
+    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeTAY() {
+    yRegister = accumulator;
+
+    // If value is 0
+    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeTSX() {
+    xRegister = stackPointer;
+
+    // If value is 0
+    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeTXA() {
+    accumulator = xRegister;
+
+    // If value is 0
+    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::executeTXS() {
+    stackPointer = xRegister;
+}
+
+void CPU::executeTYA() {
+    accumulator = yRegister;
+
+    // If value is 0
+    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+
 
 
 

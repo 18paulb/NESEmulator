@@ -375,20 +375,60 @@ public:
     // Branch if Positive - opcode $10
     void executeBPL(uint8_t);
 
-    // Branch if Not Equal - opcode $D0
-    void executeBNE(uint8_t);
-
     // Set Interrupt Disable - opcode $78
     void executeSEI();
+
+    // Clear Carry - opcode $18
+    void executeCLC();
 
     // Clear Decimal - opcode $D8
     void executeCLD();
 
-    // Transfer X to Stack Pointer - opcode $9A
-    void executeTXS();
+    // Clear Interrupt Disable - opcode $58
+    void executeCLI();
+
+    // Clear Overflow - opcode $B8
+    void executeCLV();
+
+    // Decrement X - opcode $CA
+    void executeDEX();
 
     // Decrement Y - opcode $88
     void executeDEY();
+
+    // Increment X - opcode $E8
+    void executeINX();
+
+    // Increment Y - opcode $C8
+    void executeINY();
+
+    // Push A - opcode $48
+    void executePHA();
+
+    // Set Carry - opcode $38
+    void executeSEC();
+
+    // Set Decimal - opcode $F8
+    void executeSED();
+
+    // Transfer A to X - opcode $AA
+    void executeTAX();
+
+    // Transfer A to Y - opcode $A8
+    void executeTAY();
+
+    // Transfer SP to X - opcode $BA
+    void executeTSX();
+
+    // Transfer X to A - opcode $8A
+    void executeTXA();
+
+    // Transfer X to Stack Pointer - opcode $9A
+    void executeTXS();
+
+    // Transfer Y to A - opcode $98
+    void executeTYA();
+
 
 };
 
