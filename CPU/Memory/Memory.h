@@ -10,7 +10,7 @@
 class Memory {
 
 private:
-    uint8_t memory[65536] = {};
+    uint8_t memory[65536];
 
 public:
 

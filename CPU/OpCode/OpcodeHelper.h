@@ -62,6 +62,7 @@ public:
             case 0xD0: return {Instruction::BNE, AddressingMode::Relative, 2, 2};
 
             // BPL
+            // Cycles: 2 (+1 if branch succeeds, +2 if to a new page)
             case 0x10: return {Instruction::BPL, AddressingMode::Relative, 2, 2};
 
             // BRK

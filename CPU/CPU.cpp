@@ -10,7 +10,6 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
     Instruction instructionType = instruction.instruction;
     AddressingMode addressingMode = instruction.addressingMode;
     switch (instructionType) {
-
         case ADC:
             break;
 
@@ -38,8 +37,9 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
         case BNE:
             break;
 
+        // Changes PC in different ways depending on Negative Flag (Check Method)
         case BPL:
-            executeBPL();
+            executeBPL(value);
             break;
 
         // Doesn't increment PC, sets value during execution
@@ -610,8 +610,19 @@ void CPU::executeBRK() {
     programCounter = val;
 }
 
-void CPU::executeBPL() {
+/*
+ If the zero flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+*/
+//FIXME: Potential Issues
+void CPU::executeBPL(uint8_t val) {
+    // Increment program counter normally
+    programCounter += 2;
 
+    if (!isFlagSet(StatusFlag::Negative)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
 }
 
 

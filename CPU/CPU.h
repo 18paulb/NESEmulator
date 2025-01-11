@@ -224,7 +224,7 @@ public:
         }
     }
 
-    bool checkFlag(StatusFlag flag) const {
+    bool isFlagSet(StatusFlag flag) const {
         switch (flag) {
             case Carry:
                 return pStatus & FLAG_C;
@@ -249,7 +249,6 @@ public:
 
             default:
                 return false;
-                cerr << "Unknown flag " << flag << endl;
         }
     }
 
@@ -367,9 +366,11 @@ public:
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
 
+    // Force Interrupt - opcode $00
     void executeBRK();
 
-    void executeBPL();
+    // Branch if Positive - opcode $10
+    void executeBPL(uint8_t);
 
 };
 
