@@ -107,6 +107,8 @@ public:
             cerr << "Error reading instruction" << endl;
         }
 
+        cout << toString(instruction.instruction) << " " << toString(instruction.addressingMode) << endl;
+
         // Grab the data from the following bytes depending on instruction
         // With all official opcodes (not counting unofficial) there is max 3 bytes
         if (instruction.byteCount == 1) {

@@ -5,6 +5,9 @@
 #ifndef NESEMULATOR_ADRESSINGMODE_H
 #define NESEMULATOR_ADRESSINGMODE_H
 
+#include <string>
+#include <unordered_map>
+
 enum AddressingMode {
     Accumulator, // Acts directly upon the accumulator
     Immediate, // Loads content itself, ex. LDA #$04 will load 0x04 into the Accumulator Register
@@ -21,5 +24,27 @@ enum AddressingMode {
     Implied,
     UNKNOWN
 };
+
+inline std::string toString(AddressingMode mode) {
+    static const std::unordered_map<AddressingMode, std::string> modeToString = {
+        {Accumulator, "Accumulator"},
+        {Immediate, "Immediate"},
+        {ZeroPage, "ZeroPage"},
+        {ZeroPageX, "ZeroPageX"},
+        {ZeroPageY, "ZeroPageY"},
+        {Relative, "Relative"},
+        {Absolute, "Absolute"},
+        {AbsoluteX, "AbsoluteX"},
+        {AbsoluteY, "AbsoluteY"},
+        {Indirect, "Indirect"},
+        {IndirectX, "IndirectX"},
+        {IndirectY, "IndirectY"},
+        {Implied, "Implied"},
+        {UNKNOWN, "UNKNOWN"}
+    };
+
+    auto it = modeToString.find(mode);
+    return it != modeToString.end() ? it->second : "INVALID_MODE";
+}
 
 #endif //NESEMULATOR_ADRESSINGMODE_H

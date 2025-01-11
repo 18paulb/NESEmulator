@@ -65,4 +65,22 @@ enum Instruction {
     INVALID
 };
 
+inline std::string toString(Instruction instruction) {
+    static const std::unordered_map<Instruction, std::string> instructionToString = {
+        {ADC, "ADC"}, {AND, "AND"}, {ASL, "ASL"}, {BCC, "BCC"}, {BCS, "BCS"}, {BEQ, "BEQ"},
+        {BIT, "BIT"}, {BMI, "BMI"}, {BNE, "BNE"}, {BPL, "BPL"}, {BRK, "BRK"}, {BVC, "BVC"},
+        {BVS, "BVS"}, {CLC, "CLC"}, {CLD, "CLD"}, {CLI, "CLI"}, {CLV, "CLV"}, {CMP, "CMP"},
+        {CPX, "CPX"}, {CPY, "CPY"}, {DEC, "DEC"}, {DEX, "DEX"}, {DEY, "DEY"}, {EOR, "EOR"},
+        {INC, "INC"}, {INX, "INX"}, {INY, "INY"}, {JMP, "JMP"}, {JSR, "JSR"}, {LDA, "LDA"},
+        {LDX, "LDX"}, {LDY, "LDY"}, {LSR, "LSR"}, {NOP, "NOP"}, {ORA, "ORA"}, {PHA, "PHA"},
+        {PHP, "PHP"}, {PLA, "PLA"}, {PLP, "PLP"}, {ROL, "ROL"}, {ROR, "ROR"}, {RTI, "RTI"},
+        {RTS, "RTS"}, {SBC, "SBC"}, {SEC, "SEC"}, {SED, "SED"}, {SEI, "SEI"}, {STA, "STA"},
+        {STX, "STX"}, {STY, "STY"}, {TAX, "TAX"}, {TAY, "TAY"}, {TSX, "TSX"}, {TXA, "TXA"},
+        {TXS, "TXS"}, {TYA, "TYA"}, {INVALID, "INVALID"}
+    };
+
+    auto it = instructionToString.find(instruction);
+    return it != instructionToString.end() ? it->second : "UNKNOWN_INSTRUCTION";
+}
+
 #endif //NESEMULATOR_INSTRUCTION_H
