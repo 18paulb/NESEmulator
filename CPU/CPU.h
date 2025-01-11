@@ -375,6 +375,15 @@ public:
     // Set Interrupt Disable - opcode $78
     void executeSEI();
 
+    // Clear Decimal - opcode $D8
+    void executeCLD();
+
+    // Transfer X to Stack Pointer - opcode $9A
+    void executeTXS();
+
+    // Decrement Y - opcode $88
+    void executeDEY();
+
 };
 
 

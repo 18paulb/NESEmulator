@@ -57,6 +57,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case CLD:
+            executeCLD();
+            programCounter += instruction.byteCount;
             break;
 
         case CLI:
@@ -81,6 +83,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case DEY:
+            executeDEY();
+            programCounter += instruction.byteCount;
             break;
 
         case EOR:
@@ -191,6 +195,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case TXS:
+            executeTXS();
+            programCounter += instruction.byteCount;
             break;
 
         case TYA:
@@ -236,19 +242,11 @@ void CPU::executeLDA(AddressingMode mode, T value) {
             cout << "Error with LDA type" << endl;
     }
 
-    // Set Flags
-    if (accumulator == 0) {
-        setFlag(StatusFlag::Zero);
-    } else {
-        clearFlag(StatusFlag::Zero);
-    }
+    // If value is 0
+    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
 
     // if bit 7 of accumulator is set
-    if (accumulator & BIT_7) {
-        setFlag(StatusFlag::Negative);
-    } else {
-        clearFlag(StatusFlag::Negative);
-    }
+    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
 }
 
 void CPU::LDA_Immediate(uint8_t value) {
@@ -328,19 +326,12 @@ void CPU::executeLDX(AddressingMode mode, T value) {
             cout << "Error with LDX type" << endl;
     }
 
-    // Set Flags
-    if (xRegister == 0) {
-        setFlag(StatusFlag::Zero);
-    } else {
-        clearFlag(StatusFlag::Zero);
-    }
+    // If value is 0
+    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
 
     // if bit 7 of accumulator is set
-    if (xRegister & BIT_7) {
-        setFlag(StatusFlag::Negative);
-    } else {
-        clearFlag(StatusFlag::Negative);
-    }
+    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+
 }
 
 void CPU::LDX_Immediate(uint8_t value) {
@@ -389,19 +380,12 @@ void CPU::executeLDY(AddressingMode mode, T value) {
             cout << "Error with LDY type" << endl;
     }
 
-    // Set Flags
-    if (yRegister == 0) {
-        setFlag(StatusFlag::Zero);
-    } else {
-        clearFlag(StatusFlag::Zero);
-    }
+    // If value is 0
+    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
 
     // if bit 7 of accumulator is set
-    if (yRegister & BIT_7) {
-        setFlag(StatusFlag::Negative);
-    } else {
-        clearFlag(StatusFlag::Negative);
-    }
+    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+
 }
 
 
@@ -630,6 +614,25 @@ void CPU::executeBPL(uint8_t val) {
 void CPU::executeSEI() {
     setFlag(StatusFlag::InterruptDisable);
 }
+
+void CPU::executeCLD() {
+    clearFlag(StatusFlag::Decimal);
+}
+
+void CPU::executeTXS() {
+    stackPointer = xRegister;
+}
+
+void CPU::executeDEY() {
+    yRegister -= 1;
+
+    // If value is 0
+    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+    // if bit 7 of accumulator is set
+    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
 
 
 
