@@ -274,11 +274,7 @@ void CPU::executeLDA(AddressingMode mode, T value) {
             cout << "Error with LDA type" << endl;
     }
 
-    // If value is 0
-    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(accumulator);
 }
 
 void CPU::LDA_Immediate(uint8_t value) {
@@ -358,12 +354,7 @@ void CPU::executeLDX(AddressingMode mode, T value) {
             cout << "Error with LDX type" << endl;
     }
 
-    // If value is 0
-    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
-
+    setZeroAndNegativeFlag(xRegister);
 }
 
 void CPU::LDX_Immediate(uint8_t value) {
@@ -412,12 +403,7 @@ void CPU::executeLDY(AddressingMode mode, T value) {
             cout << "Error with LDY type" << endl;
     }
 
-    // If value is 0
-    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
-
+    setZeroAndNegativeFlag(yRegister);
 }
 
 
@@ -680,42 +666,22 @@ void CPU::executeCLV() {
 
 void CPU::executeDEY() {
     yRegister -= 1;
-
-    // If value is 0
-    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(yRegister);
 }
 
 void CPU::executeDEX() {
     xRegister -= 1;
-
-    // If value is 0
-    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(xRegister);
 }
 
 void CPU::executeINX() {
     xRegister += 1;
-
-    // If value is 0
-    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(xRegister);
 }
 
 void CPU::executeINY() {
     yRegister += 1;
-
-    // If value is 0
-    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(yRegister);
 }
 
 void CPU::executePHA() {
@@ -732,42 +698,22 @@ void CPU::executeSED() {
 
 void CPU::executeTAX() {
     xRegister = accumulator;
-
-    // If value is 0
-    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(xRegister);
 }
 
 void CPU::executeTAY() {
     yRegister = accumulator;
-
-    // If value is 0
-    yRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    yRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(yRegister);
 }
 
 void CPU::executeTSX() {
     xRegister = stackPointer;
-
-    // If value is 0
-    xRegister == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    xRegister & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(xRegister);
 }
 
 void CPU::executeTXA() {
     accumulator = xRegister;
-
-    // If value is 0
-    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(accumulator);
 }
 
 void CPU::executeTXS() {
@@ -776,12 +722,7 @@ void CPU::executeTXS() {
 
 void CPU::executeTYA() {
     accumulator = yRegister;
-
-    // If value is 0
-    accumulator == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
-
-    // if bit 7 of accumulator is set
-    accumulator & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    setZeroAndNegativeFlag(accumulator);
 }
 
 

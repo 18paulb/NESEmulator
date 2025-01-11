@@ -252,6 +252,19 @@ public:
         }
     }
 
+    // This is a pretty specific function but it is used a decent amount
+    // Whenever the accumulator, xRegister, or yRegister change values, make sure to update Zero and Negative flags
+    void setZeroAndNegativeFlag(uint8_t val) {
+        // If value is 0
+        val == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+
+        // if bit 7 of the register is set
+        val & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+    }
+
+    // Everything below this strictly deals with instructions
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     template<typename T>
     void delegateInstructionExecution(InstructionMetadata, T);
 
