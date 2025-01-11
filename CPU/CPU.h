@@ -369,6 +369,9 @@ public:
     // Force Interrupt - opcode $00
     void executeBRK();
 
+    // Branch if Not Equal - opcode $D0
+    void executeBNE(uint8_t);
+
     // Branch if Positive - opcode $10
     void executeBPL(uint8_t);
 

@@ -34,7 +34,9 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
         case BMI:
             break;
 
+        // Changes PC in different ways depending on Zero Flag (Check Method)
         case BNE:
+            executeBNE(value);
             break;
 
         // Changes PC in different ways depending on Negative Flag (Check Method)
@@ -597,7 +599,22 @@ void CPU::executeBRK() {
 }
 
 /*
- If the zero flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
+ If the negative flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+*/
+//FIXME: Potential Issues
+void CPU::executeBNE(uint8_t val) {
+    // Increment program counter normally
+    programCounter += 2;
+
+    if (!isFlagSet(StatusFlag::Zero)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+/*
+ If the negative flag is clear, BPL branches to a nearby location by adding the branch offset to the program counter.
  The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
 */
 //FIXME: Potential Issues
