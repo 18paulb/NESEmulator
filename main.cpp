@@ -25,11 +25,11 @@ int main(const int argc, char *argv[]) {
 
     nes.getCPU().initializeProgramCounter();
 
-    for (int i = 0; i < 65536; ++i) {
-        if (nes.getCPU().getMemory(i) != '\0') {
-            cout << i << ": " << nes.getCPU().getMemory(i) << endl;
-        }
-    }
+    // for (int i = 0; i < 65536; ++i) {
+    //     if (nes.getCPU().getMemory(i) != '\0') {
+    //         cout << i << ": " << nes.getCPU().getMemory(i) << endl;
+    //     }
+    // }
 
     nes.step(1);
 

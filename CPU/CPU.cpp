@@ -29,6 +29,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case BIT:
+            executeBIT(value);
+            programCounter += instruction.byteCount;
             break;
 
         case BMI:
@@ -241,6 +243,19 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
 template void CPU::delegateInstructionExecution<uint8_t>(InstructionMetadata, uint8_t);
 template void CPU::delegateInstructionExecution<uint16_t>(InstructionMetadata, uint16_t);
+
+template<typename T>
+void CPU::executeBIT(T address) {
+    // Set Zero Flag on result of A & memory
+    uint8_t val = memory[address];
+    (accumulator & val) == 0 ? setFlag(Zero) : clearFlag(Zero);
+
+    uint8_t bit6 = GET_BIT(val, 6);
+    uint8_t bit7 = GET_BIT(val, 7);
+
+    bit6 ? setFlag(StatusFlag::Overflow) : clearFlag(StatusFlag::Overflow);
+    bit7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
 
 template<typename T>
 void CPU::executeLDA(AddressingMode mode, T value) {

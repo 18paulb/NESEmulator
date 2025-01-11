@@ -28,6 +28,9 @@ using namespace std;
 
 #define BIT_7 0x80
 
+// bit is 0-indexed
+#define GET_BIT(value, bit) ((value >> (bit)) & 0b00000001)
+
 class CPU final : public SystemPart {
 public:
 private:
@@ -380,6 +383,11 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
+
+    template<typename T>
+    // Bit Test - opcodes $24 and $2C
+    // Even though there are multiple addressing modes for this instruction, the implementation is the same
+    void executeBIT(T);
 
     // Force Interrupt - opcode $00
     void executeBRK();
