@@ -159,6 +159,8 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case SEI:
+            executeSEI();
+            programCounter += instruction.byteCount;
             break;
 
         case STA:
@@ -624,5 +626,10 @@ void CPU::executeBPL(uint8_t val) {
         programCounter += displacement;
     }
 }
+
+void CPU::executeSEI() {
+    setFlag(StatusFlag::InterruptDisable);
+}
+
 
 

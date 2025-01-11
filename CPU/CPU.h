@@ -372,6 +372,9 @@ public:
     // Branch if Positive - opcode $10
     void executeBPL(uint8_t);
 
+    // Set Interrupt Disable - opcode $78
+    void executeSEI();
+
 };
 
 
