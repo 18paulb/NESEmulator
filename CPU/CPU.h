@@ -388,9 +388,6 @@ public:
     // Branch if Positive - opcode $10
     void executeBPL(uint8_t);
 
-    // Set Interrupt Disable - opcode $78
-    void executeSEI();
-
     // Clear Carry - opcode $18
     void executeCLC();
 
@@ -423,6 +420,9 @@ public:
 
     // Set Decimal - opcode $F8
     void executeSED();
+
+    // Set Interrupt Disable - opcode $78
+    void executeSEI();
 
     // Transfer A to X - opcode $AA
     void executeTAX();

@@ -644,10 +644,6 @@ void CPU::executeBPL(uint8_t val) {
     }
 }
 
-void CPU::executeSEI() {
-    setFlag(StatusFlag::InterruptDisable);
-}
-
 void CPU::executeCLC() {
     clearFlag(StatusFlag::Carry);
 }
@@ -694,6 +690,10 @@ void CPU::executeSEC() {
 
 void CPU::executeSED() {
     setFlag(StatusFlag::Decimal);
+}
+
+void CPU::executeSEI() {
+    setFlag(StatusFlag::InterruptDisable);
 }
 
 void CPU::executeTAX() {
