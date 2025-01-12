@@ -30,7 +30,6 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case BIT:
             executeBIT(value);
-            programCounter += instruction.byteCount;
             break;
 
         case BMI:
@@ -59,22 +58,18 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case CLC:
             executeCLC();
-            programCounter += instruction.byteCount;
             break;
 
         case CLD:
             executeCLD();
-            programCounter += instruction.byteCount;
             break;
 
         case CLI:
             executeCLI();
-            programCounter += instruction.byteCount;
             break;
 
         case CLV:
             executeCLV();
-            programCounter += instruction.byteCount;
             break;
 
         case CMP:
@@ -91,12 +86,10 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case DEX:
             executeDEX();
-            programCounter += instruction.byteCount;
             break;
 
         case DEY:
             executeDEY();
-            programCounter += instruction.byteCount;
             break;
 
         case EOR:
@@ -107,12 +100,10 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case INX:
             executeINX();
-            programCounter += instruction.byteCount;
             break;
 
         case INY:
             executeINY();
-            programCounter += instruction.byteCount;
             break;
 
         case JMP:
@@ -123,17 +114,14 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case LDA:
             executeLDA(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case LDX:
             executeLDX(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case LDY:
             executeLDY(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case LSR:
@@ -141,7 +129,6 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case NOP:
             // No instruction, used to waste CPU cycles
-            programCounter += instruction.byteCount;
             break;
 
         case ORA:
@@ -149,7 +136,6 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case PHA:
             executePHA();
-            programCounter += instruction.byteCount;
             break;
 
         case PHP:
@@ -178,62 +164,50 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
 
         case SEC:
             executeSEC();
-            programCounter += instruction.byteCount;
             break;
 
         case SED:
             executeSED();
-            programCounter += instruction.byteCount;
             break;
 
         case SEI:
             executeSEI();
-            programCounter += instruction.byteCount;
             break;
 
         case STA:
             executeSTA(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case STX:
             executeSTX(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case STY:
             executeSTY(addressingMode, value);
-            programCounter += instruction.byteCount;
             break;
 
         case TAX:
             executeTAX();
-            programCounter += instruction.byteCount;
             break;
 
         case TAY:
             executeTAY();
-            programCounter += instruction.byteCount;
             break;
 
         case TSX:
             executeTSX();
-            programCounter += instruction.byteCount;
             break;
 
         case TXA:
             executeTXA();
-            programCounter += instruction.byteCount;
             break;
 
         case TXS:
             executeTXS();
-            programCounter += instruction.byteCount;
             break;
 
         case TYA:
             executeTYA();
-            programCounter += instruction.byteCount;
             break;
 
         default:
@@ -598,7 +572,8 @@ void CPU::STY_Absolute(uint16_t address) {
 void CPU::executeBRK() {
     // 1.
     // First calculate PC + 2 (return address)
-    uint16_t pcPlusTwo = programCounter + 2;
+    // We add plus one because the PC has already been incremented once already in fetch cycle
+    uint16_t pcPlusTwo = programCounter + 1;
 
     // Break PC into high and low bytes
     uint8_t highByte = (pcPlusTwo >> 8) & 0xFF;
@@ -632,12 +607,12 @@ void CPU::executeBRK() {
 /*
  If the negative flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
  The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
 */
 //FIXME: Potential Issues
 void CPU::executeBNE(uint8_t val) {
-    // Increment program counter normally
-    programCounter += 2;
-
     if (!isFlagSet(StatusFlag::Zero)) {
         auto displacement = static_cast<int8_t>(val);
         programCounter += displacement;
@@ -647,12 +622,12 @@ void CPU::executeBNE(uint8_t val) {
 /*
  If the negative flag is clear, BPL branches to a nearby location by adding the branch offset to the program counter.
  The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
 */
 //FIXME: Potential Issues
 void CPU::executeBPL(uint8_t val) {
-    // Increment program counter normally
-    programCounter += 2;
-
     if (!isFlagSet(StatusFlag::Negative)) {
         auto displacement = static_cast<int8_t>(val);
         programCounter += displacement;

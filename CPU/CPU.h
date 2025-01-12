@@ -101,7 +101,7 @@ public:
     }
 
     void executeInstruction() {
-        const uint8_t currOpcode = getMemory(programCounter);
+        const uint8_t currOpcode = getMemory(programCounter++);
 
         // Get all metadata for instruction such as: AddressingMode, Instruction, Bytes, Cycles
         const InstructionMetadata instruction = OpcodeHelper::getInstructionMetadata(currOpcode);
@@ -120,12 +120,12 @@ public:
             delegateInstructionExecution(instruction, placeholder);
         }
         else if (instruction.byteCount == 2) {
-            const uint8_t val = getMemory(programCounter+1);
+            const uint8_t val = getMemory(programCounter++);
             delegateInstructionExecution(instruction, val);
         }
         else if (instruction.byteCount == 3) {
-            const uint8_t lowByte = getMemory(programCounter+1);
-            const uint8_t highByte = getMemory(programCounter+2);
+            const uint8_t lowByte = getMemory(programCounter++);
+            const uint8_t highByte = getMemory(programCounter++);
             // Combine the two bytes together using bit shifting
             const uint16_t val = (highByte << 8) | lowByte;
 
