@@ -301,6 +301,33 @@ public:
     void ADC_IndirectY(uint8_t);
 
     template<typename T>
+    void executeAND(AddressingMode, T);
+
+    // Bitwise AND - opcode $29
+    void AND_Immediate(uint8_t);
+
+    // Bitwise AND - opcode $25
+    void AND_ZeroPage(uint8_t);
+
+    // Bitwise AND - opcode $35
+    void AND_ZeroPageX(uint8_t);
+
+    // Bitwise AND - opcode $2D
+    void AND_Absolute(uint16_t);
+
+    // Bitwise AND - opcode $3D
+    void AND_AbsoluteX(uint16_t);
+
+    // Bitwise AND - opcode $39
+    void AND_AbsoluteY(uint16_t);
+
+    // Bitwise AND - opcode $21
+    void AND_IndirectX(uint8_t);
+
+    // Bitwise AND - opcode $31
+    void AND_IndirectY(uint8_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9

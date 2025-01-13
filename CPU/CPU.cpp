@@ -4,6 +4,8 @@
 
 #include "CPU/CPU.h"
 
+#include <numeric>
+
 // Manually increment PC during cases to add more control to PC since some instructions don't increment
 template<typename T>
 void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value) {
@@ -454,6 +456,105 @@ void CPU::ADC_IndirectY(uint8_t address) {
     overflowOccurred ? setFlag(StatusFlag::Overflow) : clearFlag(StatusFlag::Overflow);
     setZeroAndNegativeFlag(accumulator);
 }
+
+template<typename T>
+void CPU::executeAND(AddressingMode mode, T value) {
+    switch (mode) {
+        case Immediate:
+            AND_Immediate(value);
+            break;
+
+        case ZeroPage:
+            AND_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            AND_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            AND_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            AND_AbsoluteX(value);
+            break;
+
+        case AbsoluteY:
+            AND_AbsoluteY(value);
+            break;
+
+        case IndirectX:
+            AND_IndirectX(value);
+            break;
+
+        case IndirectY:
+            AND_IndirectY(value);
+            break;
+
+        default:
+            cerr << "Invalid addressing mode for AND" << endl;
+    }
+}
+
+void CPU::AND_Immediate(uint8_t value) {
+    accumulator = accumulator & value;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+
+}
+
+void CPU::AND_ZeroPageX(uint8_t address) {
+    uint8_t val = memory[address + xRegister];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_AbsoluteX(uint16_t address) {
+    uint8_t val = memory[address + xRegister];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_AbsoluteY(uint16_t address) {
+    uint8_t val = memory[address + yRegister];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_IndirectX(uint8_t address) {
+    uint8_t indirectAddress = address + xRegister;
+    uint8_t lowByte = memory[indirectAddress];
+    uint8_t highByte = memory[indirectAddress + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+
+    uint8_t val = memory[targetAddress];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::AND_IndirectY(uint8_t address) {
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+    targetAddress += yRegister;
+
+    uint8_t val = memory[targetAddress];
+    accumulator = accumulator & val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
 
 
 template<typename T>
