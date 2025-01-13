@@ -455,6 +455,12 @@ public:
     // Decrement Memory - opcode $DE
     void DEC_AbsoluteX(uint16_t);
 
+    // Decrement X - opcode $CA
+    void executeDEX();
+
+    // Decrement Y - opcode $88
+    void executeDEY();
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
@@ -565,12 +571,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    // Decrement X - opcode $CA
-    void executeDEX();
-
-    // Decrement Y - opcode $88
-    void executeDEY();
 
     // Increment X - opcode $E8
     void executeINX();
