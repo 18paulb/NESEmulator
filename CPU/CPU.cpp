@@ -165,6 +165,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case PHP:
+            executePHP();
             break;
 
         case PLA:
@@ -1703,7 +1704,11 @@ void CPU::executePHA() {
 }
 
 void CPU::executePHP() {
+    uint8_t pStatusCopy = pStatus;
+    // Set Break flag on copy
+    pStatusCopy |= FLAG_B;
 
+    pushToStack(pStatusCopy);
 }
 
 template<typename T>
