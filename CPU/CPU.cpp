@@ -1702,6 +1702,10 @@ void CPU::executePHA() {
     pushToStack(accumulator);
 }
 
+void CPU::executePHP() {
+
+}
+
 template<typename T>
 void CPU::executeSTA(AddressingMode mode, T value) {
     switch (mode) {
