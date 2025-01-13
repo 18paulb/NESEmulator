@@ -503,6 +503,12 @@ public:
     // Increment Memory - opcode $FE
     void INC_AbsoluteX(uint16_t);
 
+    // Increment X - opcode $E8
+    void executeINX();
+
+    // Increment Y - opcode $C8
+    void executeINY();
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
@@ -613,12 +619,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    // Increment X - opcode $E8
-    void executeINX();
-
-    // Increment Y - opcode $C8
-    void executeINY();
 
     // Push A - opcode $48
     void executePHA();

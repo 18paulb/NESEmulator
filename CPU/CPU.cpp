@@ -1270,6 +1270,16 @@ void CPU::INC_AbsoluteX(uint16_t address) {
     setZeroAndNegativeFlag(memory[address + xRegister]);
 }
 
+void CPU::executeINX() {
+    xRegister += 1;
+    setZeroAndNegativeFlag(xRegister);
+}
+
+void CPU::executeINY() {
+    yRegister += 1;
+    setZeroAndNegativeFlag(yRegister);
+}
+
 template<typename T>
 void CPU::executeLDA(AddressingMode mode, T value) {
     // Switch based on the addressing mode
@@ -1583,16 +1593,6 @@ void CPU::STY_ZeroPageX(uint8_t address) {
 
 void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
-}
-
-void CPU::executeINX() {
-    xRegister += 1;
-    setZeroAndNegativeFlag(xRegister);
-}
-
-void CPU::executeINY() {
-    yRegister += 1;
-    setZeroAndNegativeFlag(yRegister);
 }
 
 void CPU::executePHA() {
