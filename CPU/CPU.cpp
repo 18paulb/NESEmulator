@@ -117,6 +117,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case INC:
+            executeINC(addressingMode, value);
             break;
 
         case INX:
@@ -1223,6 +1224,50 @@ void CPU::EOR_IndirectY(uint8_t address) {
     uint8_t val = memory[targetAddress];
     accumulator ^= val;
     setZeroAndNegativeFlag(accumulator);
+}
+
+template<typename T>
+void CPU::executeINC(AddressingMode mode, T value) {
+    switch (mode) {
+        case ZeroPage:
+            INC_ZeroPage(value);
+        break;
+
+        case ZeroPageX:
+            INC_ZeroPageX(value);
+        break;
+
+        case Absolute:
+            INC_Absolute(value);
+        break;
+
+        case AbsoluteX:
+            INC_AbsoluteX(value);
+        break;
+
+        default:
+            cout << "Invalid addressing mode for DEC" << endl;
+    }
+}
+
+void CPU::INC_ZeroPage(uint8_t address) {
+    memory[address] += 1;
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::INC_ZeroPageX(uint8_t address) {
+    memory[address + xRegister] += 1;
+    setZeroAndNegativeFlag(memory[address + xRegister]);
+}
+
+void CPU::INC_Absolute(uint16_t address) {
+    memory[address] += 1;
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::INC_AbsoluteX(uint16_t address) {
+    memory[address + xRegister] += 1;
+    setZeroAndNegativeFlag(memory[address + xRegister]);
 }
 
 template<typename T>

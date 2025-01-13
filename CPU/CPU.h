@@ -489,6 +489,21 @@ public:
     void EOR_IndirectY(uint8_t);
 
     template<typename T>
+    void executeINC(AddressingMode, T);
+
+    // Increment Memory - opcode $E6
+    void INC_ZeroPage(uint8_t);
+
+    // Increment Memory - opcode $F6
+    void INC_ZeroPageX(uint8_t);
+
+    // Increment Memory - opcode $EE
+    void INC_Absolute(uint16_t);
+
+    // Increment Memory - opcode $FE
+    void INC_AbsoluteX(uint16_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
