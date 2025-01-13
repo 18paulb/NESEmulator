@@ -133,6 +133,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case JSR:
+            executeJSR(value);
             break;
 
         case LDA:
@@ -1313,6 +1314,27 @@ void CPU::JMP_Indirect(uint16_t address) {
     uint16_t targetAddress = highByte << 8 | lowByte;
 
     programCounter = memory[targetAddress];
+}
+
+/*
+    Notably, the return address on the stack points 1 byte before the start of the next instruction,
+    rather than directly at the instruction.
+    This is because RTS increments the program counter before the next instruction is fetched.
+*/
+void CPU::executeJSR(uint16_t address) {
+    // This is the return address that we will be pushing to the stack, 1 byte LESS than the start
+    // of the next instruction
+    uint16_t returnAddress = programCounter - 1;
+
+    // Break PC into high and low bytes
+    uint8_t highByte = (returnAddress >> 8) & 0xFF;
+    uint8_t lowByte = returnAddress & 0xFF;
+
+    // Push high byte first (due to 6502 being little-endian)
+    pushToStack(highByte);
+    pushToStack(lowByte);
+
+    programCounter = address;
 }
 
 template<typename T>

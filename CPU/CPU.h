@@ -518,6 +518,9 @@ public:
     // Jump - opcode $6C
     void JMP_Indirect(uint16_t);
 
+    // Jump to Subroutine
+    void executeJSR(uint16_t);
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
