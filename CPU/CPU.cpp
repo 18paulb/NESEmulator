@@ -972,6 +972,56 @@ void CPU::CMP_IndirectY(uint8_t address) {
     bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
 }
 
+template<typename T>
+void CPU::executeCPX(AddressingMode mode, T value) {
+    switch (mode) {
+        case Immediate:
+            CPX_Immediate(value);
+            break;
+
+        case ZeroPage:
+            CPX_ZeroPage(value);
+            break;
+
+        case Absolute:
+            CPX_Absolute(value);
+            break;
+
+        default:
+            cout << "Invalid addressing mode for CPX" << endl;
+    }
+}
+
+void CPU::CPX_Immediate(uint8_t val) {
+    uint8_t result = xRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    xRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    xRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CPX_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = xRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    xRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    xRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CPX_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = xRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    xRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    xRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+
 
 
 
