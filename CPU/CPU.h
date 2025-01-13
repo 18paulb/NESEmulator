@@ -359,6 +359,10 @@ public:
     // Even though there are multiple addressing modes for this instruction, the implementation is the same
     void executeBIT(T);
 
+    // Branch if Minus - opcode $30
+    void executeBMI(uint8_t);
+
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 

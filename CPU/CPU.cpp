@@ -41,6 +41,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case BMI:
+            executeBMI(value);
             break;
 
         // Changes PC in different ways depending on Zero Flag (Check Method)
@@ -698,6 +699,21 @@ void CPU::executeBIT(T address) {
 
     bit6 != 0 ? setFlag(StatusFlag::Overflow) : clearFlag(StatusFlag::Overflow);
     bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+/*
+ If the negative flag is set, BMI branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBMI(uint8_t val) {
+    if (isFlagSet(StatusFlag::Negative)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
 }
 
 template<typename T>
