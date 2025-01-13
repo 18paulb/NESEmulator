@@ -355,6 +355,11 @@ public:
     void executeBEQ(uint8_t);
 
     template<typename T>
+    // Bit Test - opcodes $24 and $2C
+    // Even though there are multiple addressing modes for this instruction, the implementation is the same
+    void executeBIT(T);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
@@ -464,11 +469,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    template<typename T>
-    // Bit Test - opcodes $24 and $2C
-    // Even though there are multiple addressing modes for this instruction, the implementation is the same
-    void executeBIT(T);
 
     // Force Interrupt - opcode $00
     void executeBRK();
