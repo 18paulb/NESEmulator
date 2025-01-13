@@ -716,6 +716,80 @@ void CPU::executeBMI(uint8_t val) {
     }
 }
 
+/*
+ If the negative flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBNE(uint8_t val) {
+    if (!isFlagSet(StatusFlag::Zero)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+/*
+ If the negative flag is clear, BPL branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBPL(uint8_t val) {
+    if (!isFlagSet(StatusFlag::Negative)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+// FIXME: Warning: I've seen different things for the necessity of step 3-4 so if bugs happen, it could be that
+/*
+ Three things happen during the BRK instruction
+ 1. The PC+2 is pushed to the stack
+ 2. A copy of the status register will be pushed to the stack with the break flag set to 1.
+ 3. Set the interrupt flag on the status register,
+ 4. Set PC to 0xFFFE 0xFFFF
+*/
+void CPU::executeBRK() {
+    // 1.
+    // First calculate PC + 2 (return address)
+    // We add plus one because the PC has already been incremented once already in fetch cycle
+    uint16_t pcPlusTwo = programCounter + 1;
+
+    // Break PC into high and low bytes
+    uint8_t highByte = (pcPlusTwo >> 8) & 0xFF;
+    uint8_t lowByte = pcPlusTwo & 0xFF;
+
+    // Push high byte first (due to 6502 being little-endian)
+    pushToStack(highByte);
+
+    // Then push low byte
+    pushToStack(lowByte);
+
+    // 2.
+    uint8_t tmpPStatus = pStatus;
+    // Manually do the bitwise operation here so that the original pStatus is not altered
+    tmpPStatus |= FLAG_B;
+    setMemory(STACK_POINTER_OFFSET + stackPointer, tmpPStatus);
+    stackPointer--;
+
+    // 3.
+    setFlag(StatusFlag::InterruptDisable);
+
+    // 4.
+    lowByte = memory[0xFFFE];
+    highByte = memory[0xFFFD];
+    // Combine the two bytes together using bit shifting
+    uint16_t val = (highByte << 8) | lowByte;
+
+    programCounter = val;
+}
+
+
 template<typename T>
 void CPU::executeLDA(AddressingMode mode, T value) {
     // Switch based on the addressing mode
@@ -1029,79 +1103,6 @@ void CPU::STY_ZeroPageX(uint8_t address) {
 
 void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
-}
-
-// FIXME: Warning: I've seen different things for the necessity of step 3-4 so if bugs happen, it could be that
-/*
- Three things happen during the BRK instruction
- 1. The PC+2 is pushed to the stack
- 2. A copy of the status register will be pushed to the stack with the break flag set to 1.
- 3. Set the interrupt flag on the status register,
- 4. Set PC to 0xFFFE 0xFFFF
-*/
-void CPU::executeBRK() {
-    // 1.
-    // First calculate PC + 2 (return address)
-    // We add plus one because the PC has already been incremented once already in fetch cycle
-    uint16_t pcPlusTwo = programCounter + 1;
-
-    // Break PC into high and low bytes
-    uint8_t highByte = (pcPlusTwo >> 8) & 0xFF;
-    uint8_t lowByte = pcPlusTwo & 0xFF;
-
-    // Push high byte first (due to 6502 being little-endian)
-    pushToStack(highByte);
-
-    // Then push low byte
-    pushToStack(lowByte);
-
-    // 2.
-    uint8_t tmpPStatus = pStatus;
-    // Manually do the bitwise operation here so that the original pStatus is not altered
-    tmpPStatus |= FLAG_B;
-    setMemory(STACK_POINTER_OFFSET + stackPointer, tmpPStatus);
-    stackPointer--;
-
-    // 3.
-    setFlag(StatusFlag::InterruptDisable);
-
-    // 4.
-    lowByte = memory[0xFFFE];
-    highByte = memory[0xFFFD];
-    // Combine the two bytes together using bit shifting
-    uint16_t val = (highByte << 8) | lowByte;
-
-    programCounter = val;
-}
-
-/*
- If the negative flag is clear, BNE branches to a nearby location by adding the branch offset to the program counter.
- The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
-
- Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
- the + 2 since it is already incremented to the next instruction
-*/
-//FIXME: Potential Issues
-void CPU::executeBNE(uint8_t val) {
-    if (!isFlagSet(StatusFlag::Zero)) {
-        auto displacement = static_cast<int8_t>(val);
-        programCounter += displacement;
-    }
-}
-
-/*
- If the negative flag is clear, BPL branches to a nearby location by adding the branch offset to the program counter.
- The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
-
- Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
- the + 2 since it is already incremented to the next instruction
-*/
-//FIXME: Potential Issues
-void CPU::executeBPL(uint8_t val) {
-    if (!isFlagSet(StatusFlag::Negative)) {
-        auto displacement = static_cast<int8_t>(val);
-        programCounter += displacement;
-    }
 }
 
 void CPU::executeCLC() {

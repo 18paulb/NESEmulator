@@ -362,6 +362,14 @@ public:
     // Branch if Minus - opcode $30
     void executeBMI(uint8_t);
 
+    // Branch if Not Equal - opcode $D0
+    void executeBNE(uint8_t);
+
+    // Branch if Positive - opcode $10
+    void executeBPL(uint8_t);
+
+    // Force Interrupt - opcode $00
+    void executeBRK();
 
     template<typename T>
     void executeLDA(AddressingMode, T);
@@ -473,15 +481,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    // Force Interrupt - opcode $00
-    void executeBRK();
-
-    // Branch if Not Equal - opcode $D0
-    void executeBNE(uint8_t);
-
-    // Branch if Positive - opcode $10
-    void executeBPL(uint8_t);
 
     // Clear Carry - opcode $18
     void executeCLC();
