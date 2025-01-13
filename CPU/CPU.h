@@ -629,6 +629,9 @@ public:
     // Bitwise OR - opcode $11
     void ORA_IndirectY(uint8_t);
 
+    // Push A - opcode $48
+    void executePHA();
+
     template<typename T>
     void executeSTA(AddressingMode, T);
 
@@ -676,9 +679,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    // Push A - opcode $48
-    void executePHA();
 
     // Set Carry - opcode $38
     void executeSEC();

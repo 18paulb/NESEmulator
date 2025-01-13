@@ -1698,6 +1698,10 @@ void CPU::ORA_IndirectY(uint8_t address) {
     setZeroAndNegativeFlag(accumulator);
 }
 
+void CPU::executePHA() {
+    pushToStack(accumulator);
+}
+
 template<typename T>
 void CPU::executeSTA(AddressingMode mode, T value) {
     switch (mode) {
@@ -1833,10 +1837,6 @@ void CPU::STY_ZeroPageX(uint8_t address) {
 
 void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
-}
-
-void CPU::executePHA() {
-    pushToStack(accumulator);
 }
 
 void CPU::executeSEC() {
