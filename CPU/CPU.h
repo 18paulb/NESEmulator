@@ -646,6 +646,12 @@ public:
     // Push Processor Status - opcode $08
     void executePHP();
 
+    // Pull A - opcode $68
+    void executePLA();
+
+    // Pull Processor Status - opcode $28
+    void executePLP();
+
     template<typename T>
     void executeSTA(AddressingMode, T);
 
