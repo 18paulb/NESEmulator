@@ -149,6 +149,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case LSR:
+            executeLSR(addressingMode, value);
             break;
 
         case NOP:
@@ -1513,6 +1514,89 @@ void CPU::LDY_Absolute(uint16_t address) {
 void CPU::LDY_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
     yRegister = memory[newAddress];
+}
+
+
+// FIXME: Potential Issues
+// 1. Not sure if N and Z flags should be set when changing memory, only accumulator
+template<typename T>
+void CPU::executeLSR(AddressingMode mode, T value) {
+    switch (mode) {
+        case Accumulator:
+            LSR_Accumulator();
+            break;
+
+        case ZeroPage:
+            LSR_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            LSR_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            LSR_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            LSR_AbsoluteX(value);
+            break;
+
+        default:
+            cerr << "Invalid addressing mode for ASL" << endl;
+    }
+}
+
+void CPU::LSR_Accumulator() {
+    // Capture bit 0 of the accumulator before the shift
+    uint8_t bit0 = GET_BIT(accumulator, 0);
+    accumulator = accumulator >> 1;
+
+    // bit 0 of original accumulator is the new value of the carry flag
+    bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::LSR_ZeroPage(uint8_t address) {
+    // Capture bit 0 of the accumulator before the shift
+    uint8_t bit0 = GET_BIT(memory[address], 0);
+    memory[address] = memory[address] >> 1;
+
+    // bit 0 of original memory value is the new value of the carry flag
+    bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::LSR_ZeroPageX(uint8_t address) {
+    // Capture bit 0 of the accumulator before the shift
+    uint8_t adjustedAddress = address + xRegister;
+    uint8_t bit0 = GET_BIT(memory[adjustedAddress], 0);
+    memory[adjustedAddress] = memory[adjustedAddress] >> 1;
+
+    // bit 0 of original memory value is the new value of the carry flag
+    bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[adjustedAddress]);
+}
+
+void CPU::LSR_Absolute(uint16_t address) {
+    // Capture bit 0 of the accumulator before the shift
+    uint8_t bit0 = GET_BIT(memory[address], 0);
+    memory[address] = memory[address] >> 1;
+
+    // bit 0 of original memory value is the new value of the carry flag
+    bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::LSR_AbsoluteX(uint16_t address) {
+    // Capture bit 0 of the accumulator before the shift
+    uint16_t adjustedAddress = address + xRegister;
+    uint8_t bit0 = GET_BIT(memory[adjustedAddress], 0);
+    memory[adjustedAddress] = memory[adjustedAddress] >> 1;
+
+    // bit 0 of original memory value is the new value of the carry flag
+    bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[adjustedAddress]);
 }
 
 template<typename T>

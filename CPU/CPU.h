@@ -339,7 +339,7 @@ public:
     // Arithmetic Shift Left - opcode $16
     void ASL_ZeroPageX(uint8_t);
 
-    // Arithmetic Shift Left - opcode $oE
+    // Arithmetic Shift Left - opcode $0E
     void ASL_Absolute(uint16_t);
 
     // Arithmetic Shift Left - opcode $1E
@@ -583,6 +583,24 @@ public:
 
     // Load Y Register - opcode $BC
     void LDY_AbsoluteX(uint16_t);
+
+    template<typename T>
+    void executeLSR(AddressingMode, T);
+
+    // Logical Shift Right - opcode $4A
+    void LSR_Accumulator();
+
+    // Logical Shift Right - opcode $46
+    void LSR_ZeroPage(uint8_t);
+
+    // Logical Shift Right - opcode $56
+    void LSR_ZeroPageX(uint8_t);
+
+    // Logical Shift Right - opcode $4E
+    void LSR_Absolute(uint16_t);
+
+    // Logical Shift Right - opcode $5E
+    void LSR_AbsoluteX(uint16_t);
 
     template<typename T>
     void executeSTA(AddressingMode, T);
