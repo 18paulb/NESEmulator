@@ -515,7 +515,6 @@ void CPU::LDA_ZeroPage(uint8_t address) {
 
 void CPU::LDA_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
-
     accumulator = memory[newAddress];
 }
 
@@ -525,21 +524,17 @@ void CPU::LDA_Absolute(uint16_t address) {
 
 void CPU::LDA_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
-
     accumulator = memory[newAddress];
 }
 
 void CPU::LDA_AbsoluteY(uint16_t address) {
     uint16_t newAddress = address + yRegister;
-
     accumulator = memory[newAddress];
 }
 
 void CPU::LDA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
-
     uint8_t lowByte = memory[val];
-
     uint8_t highByte = memory[val + 1];
 
     // Combine the low and high bytes to form a 16-bit target address
@@ -551,9 +546,7 @@ void CPU::LDA_IndirectX(uint8_t address) {
 void CPU::LDA_IndirectY(uint8_t address) {
     uint8_t lowByte = memory[address];
     uint8_t highByte = memory[address + 1];
-
     uint16_t targetAddress = (highByte << 8) | lowByte;
-
     targetAddress += yRegister;
 
     accumulator = memory[targetAddress];
@@ -594,7 +587,6 @@ void CPU::LDX_ZeroPage(uint8_t address) {
 
 void CPU::LDX_ZeroPageY(uint8_t address) {
     uint8_t newAddress = address + yRegister;
-
     xRegister = memory[newAddress];
 }
 
@@ -604,7 +596,6 @@ void CPU::LDX_Absolute(uint16_t address) {
 
 void CPU::LDX_AbsoluteY(uint16_t address) {
     uint16_t newAddress = address + yRegister;
-
     xRegister = memory[newAddress];
 }
 
@@ -644,7 +635,6 @@ void CPU::LDY_ZeroPage(uint8_t address) {
 
 void CPU::LDY_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
-
     yRegister = memory[newAddress];
 }
 
@@ -654,7 +644,6 @@ void CPU::LDY_Absolute(uint16_t address) {
 
 void CPU::LDY_AbsoluteX(uint16_t address) {
     uint16_t newAddress = address + xRegister;
-
     yRegister = memory[newAddress];
 }
 
@@ -712,9 +701,7 @@ void CPU::STA_AbsoluteY(uint16_t address) {
 
 void CPU::STA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
-
     uint8_t lowByte = memory[val];
-
     uint8_t highByte = memory[val + 1];
 
     // Combine the low and high bytes to form a 16-bit target address
@@ -758,7 +745,6 @@ void CPU::STX_ZeroPage(uint8_t address) {
 
 void CPU::STX_ZeroPageY(uint8_t address) {
     uint8_t newAddress = address + yRegister;
-
     memory.setMemory(newAddress, xRegister);
 }
 
@@ -791,7 +777,6 @@ void CPU::STY_ZeroPage(uint8_t address) {
 
 void CPU::STY_ZeroPageX(uint8_t address) {
     uint8_t newAddress = address + xRegister;
-
     memory.setMemory(newAddress, yRegister);
 }
 
