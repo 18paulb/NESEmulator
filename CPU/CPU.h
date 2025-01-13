@@ -441,6 +441,21 @@ public:
     void CPY_Absolute(uint16_t);
 
     template<typename T>
+    void executeDEC(AddressingMode, T);
+
+    // Decrement Memory - opcode $C6
+    void DEC_ZeroPage(uint8_t);
+
+    // Decrement Memory - opcode $D6
+    void DEC_ZeroPageX(uint8_t);
+
+    // Decrement Memory - opcode $CE
+    void DEC_Absolute(uint16_t);
+
+    // Decrement Memory - opcode $DE
+    void DEC_AbsoluteX(uint16_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9

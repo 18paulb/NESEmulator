@@ -101,6 +101,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case DEC:
+            executeDEC(addressingMode, value);
             break;
 
         case DEX:
@@ -1071,6 +1072,51 @@ void CPU::CPY_Absolute(uint16_t address) {
     yRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
     bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
 }
+
+template<typename T>
+void CPU::executeDEC(AddressingMode mode, T value) {
+    switch (mode) {
+        case ZeroPage:
+            DEC_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            DEC_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            DEC_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            DEC_AbsoluteX(value);
+            break;
+
+        default:
+            cout << "Invalid addressing mode for DEC" << endl;
+    }
+}
+
+void CPU::DEC_ZeroPage(uint8_t address) {
+    memory[address] -= 1;
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::DEC_ZeroPageX(uint8_t address) {
+    memory[address + xRegister] -= 1;
+    setZeroAndNegativeFlag(memory[address + xRegister]);
+}
+
+void CPU::DEC_Absolute(uint16_t address) {
+    memory[address] -= 1;
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::DEC_AbsoluteX(uint16_t address) {
+    memory[address + xRegister] -= 1;
+    setZeroAndNegativeFlag(memory[address + xRegister]);
+}
+
 
 template<typename T>
 void CPU::executeLDA(AddressingMode mode, T value) {
