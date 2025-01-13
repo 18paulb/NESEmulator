@@ -24,15 +24,18 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             executeASL(addressingMode, value);
             break;
 
+        // Changes PC in different ways depending on Carry Flag (Check Method)
         case BCC:
             executeBCC(value);
             break;
 
+        // Changes PC in different ways depending on Carry Flag (Check Method)
         case BCS:
             executeBCS(value);
             break;
 
         case BEQ:
+            // Changes PC in different ways depending on Zero Flag (Check Method)
             executeBEQ(value);
             break;
 
@@ -59,10 +62,14 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             executeBRK();
             break;
 
+        // Changes PC in different ways depending on Overflow Flag (Check Method)
         case BVC:
+            executeBVC(value);
             break;
 
+        // Changes PC in different ways depending on Overflow Flag (Check Method)
         case BVS:
+            executeBVS(value);
             break;
 
         case CLC:
@@ -788,6 +795,37 @@ void CPU::executeBRK() {
 
     programCounter = val;
 }
+
+/*
+ If the overflow flag is clear, BVC branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBVC(uint8_t val) {
+    if (!isFlagSet(StatusFlag::Overflow)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+/*
+ If the overflow flag is set, BVS branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBVS(uint8_t val) {
+    if (isFlagSet(StatusFlag::Overflow)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
 
 
 template<typename T>

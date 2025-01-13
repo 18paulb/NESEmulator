@@ -371,6 +371,12 @@ public:
     // Force Interrupt - opcode $00
     void executeBRK();
 
+    // Branch if Overflow clear - opcode $50
+    void executeBVC(uint8_t);
+
+    // Branch if Overflow Set - opcode $70
+    void executeBVS(uint8_t);
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
