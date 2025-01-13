@@ -129,6 +129,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case JMP:
+            executeJMP(addressingMode, value);
             break;
 
         case JSR:
@@ -1278,6 +1279,40 @@ void CPU::executeINX() {
 void CPU::executeINY() {
     yRegister += 1;
     setZeroAndNegativeFlag(yRegister);
+}
+
+template<typename T>
+void CPU::executeJMP(AddressingMode mode, T value) {
+    switch (mode) {
+        case Absolute:
+            JMP_Absolute(value);
+            break;
+
+        case Indirect:
+            JMP_Indirect(value);
+            break;
+
+        default:
+            cout << "Invalid addressing mode for JMP" << endl;
+    }
+}
+
+void CPU::JMP_Absolute(uint16_t address) {
+    programCounter = memory[address];
+}
+
+/*
+    Unfortunately, because of a CPU bug, if this 2-byte variable has an address ending in $FF and thus crosses a page,
+    then the CPU fails to increment the page when reading the second byte and thus reads the wrong address.
+    For example, JMP ($03FF) reads $03FF and $0300 instead of $0400.
+    Care should be taken to ensure this variable does not cross a page.
+*/
+void CPU::JMP_Indirect(uint16_t address) {
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
+    uint16_t targetAddress = highByte << 8 | lowByte;
+
+    programCounter = memory[targetAddress];
 }
 
 template<typename T>

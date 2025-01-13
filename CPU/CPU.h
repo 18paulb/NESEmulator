@@ -510,6 +510,15 @@ public:
     void executeINY();
 
     template<typename T>
+    void executeJMP(AddressingMode, T);
+
+    // Jump - opcode $4C
+    void JMP_Absolute(uint16_t);
+
+    // Jump - opcode $6C
+    void JMP_Indirect(uint16_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
