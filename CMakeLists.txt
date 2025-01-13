@@ -9,7 +9,7 @@ include_directories(.)
 add_executable(NESEmulator
         CPU/CPU.cpp
         CPU/CPU.h
-        CPU/OpCode/AddressingMode.h
+        CPU/Opcode/AddressingMode.h
         CPU/StatusFlag.h
         main.cpp
         tests/tests.cpp
@@ -17,11 +17,23 @@ add_executable(NESEmulator
         System/System.cpp
         CPU/Memory/Memory.h
         CPU/Memory/Memory.cpp
+        CPU/Instruction/TransferInstruction.cpp
+        CPU/Instruction/StackInstruction.cpp
+        CPU/Instruction/DecrementIncrementInstruction.cpp
+        CPU/Instruction/ArithmeticInstruction.cpp
+        CPU/Instruction/LogicalInstruction.cpp
+        CPU/Instruction/ShiftRotateInstruction.cpp
+        CPU/Instruction/FlagInstruction.cpp
+        CPU/Instruction/ComparisonInstruction.cpp
+        CPU/Instruction/BranchInstruction.cpp
+        CPU/Instruction/JumpInstruction.cpp
+        CPU/Instruction/InterruptInstruction.cpp
+        CPU/Instruction/OtherInstruction.cpp
         ROM/ROMReader.cpp
         ROM/ROMReader.h
-        CPU/OpCode/OpcodeHelper.h
+        CPU/Opcode/OpcodeHelper.h
         System/SystemPart.h
-        CPU/OpCode/Instruction.h
+        CPU/Opcode/Instruction.h
         HelperClasses/InstructionMetadata.h
 )
 

@@ -9,10 +9,10 @@
 #include <iostream>
 
 #include "StatusFlag.h"
-#include "CPU/OpCode/AddressingMode.h"
+#include "CPU/Opcode/AddressingMode.h"
 #include "CPU/Memory/Memory.h"
 #include "System/SystemPart.h"
-#include "CPU/OpCode/OpcodeHelper.h"
+#include "CPU/Opcode/OpcodeHelper.h"
 
 using namespace std;
 
@@ -134,7 +134,6 @@ public:
 
         // Grabbing the next bytes from memory for the data
         // cycle++;
-
     }
 
     void step_to(int newCount) override {
@@ -168,113 +167,21 @@ public:
     Set a flag:
         status |= STATUS_Z;    // Set Zero flag
     */
-    void setFlag(StatusFlag flag) {
-        switch (flag) {
-            case Carry:
-                pStatus |= FLAG_C;
-                break;
-            case Zero:
-                pStatus |= FLAG_Z;
-                break;
-            case InterruptDisable:
-                pStatus |= FLAG_I;
-                break;
-            case Break:
-                pStatus |= FLAG_B;
-                break;
-            case Decimal:
-                pStatus |= FLAG_D;
-                break;
-            case EXTRA:
-                pStatus |= FLAG_EXTRA;
-                break;
-            case Overflow:
-                pStatus |= FLAG_V;
-                break;
-            case Negative:
-                pStatus |= FLAG_N;
-                break;
-            default:
-                cerr << "Unknown flag " << flag << endl;
-        }
-    }
+    void setFlag(StatusFlag);
 
     /*
     Manipulate flags like this:
     Clear a flag:
         status &= ~STATUS_C;   // Clear Carry flag
     */
-    void clearFlag(StatusFlag flag) {
-        switch (flag) {
-            case Carry:
-                pStatus &= ~FLAG_C;
-                break;
-            case Zero:
-                pStatus &= ~FLAG_Z;
-                break;
-            case InterruptDisable:
-                pStatus &= ~FLAG_I;
-                break;
-            case Break:
-                pStatus &= ~FLAG_B;
-                break;
-            case Decimal:
-                pStatus &= ~FLAG_D;
-                break;
-            case EXTRA:
-                pStatus &= ~FLAG_EXTRA;
-                break;
-            case Overflow:
-                pStatus &= ~FLAG_V;
-                break;
-            case Negative:
-                pStatus &= ~FLAG_N;
-                break;
-            default:
-                cerr << "Unknown flag " << flag << endl;
-        }
-    }
+    void clearFlag(StatusFlag flag);
 
-    bool isFlagSet(StatusFlag flag) const {
-        switch (flag) {
-            case Carry:
-                return pStatus & FLAG_C;
-
-            case Zero:
-                return pStatus & FLAG_Z;
-
-            case InterruptDisable:
-                return pStatus & FLAG_I;
-
-            case Break:
-                return pStatus & FLAG_B;
-
-            case Decimal:
-                return pStatus & FLAG_D;
-
-            case EXTRA:
-                return pStatus & FLAG_EXTRA;
-
-            case Overflow:
-                return pStatus & FLAG_V;
-
-            case Negative:
-                return pStatus & FLAG_N;
-
-            default:
-                return false;
-        }
-    }
+    bool isFlagSet(StatusFlag flag) const;
 
     // This is a pretty specific function but it is used a decent amount
     // Whenever the accumulator, xRegister, or yRegister change values, make sure to update Zero and Negative flags
-    void setZeroAndNegativeFlag(uint8_t val) {
-        // If value is 0
-        val == 0 ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    void setZeroAndNegativeFlag(uint8_t val);
 
-        // if bit 7 of the register is set
-        val & BIT_7 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
-    }
 
     // Everything below this strictly deals with instructions
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

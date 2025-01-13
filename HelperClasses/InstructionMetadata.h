@@ -5,7 +5,7 @@
 #ifndef NESEMULATOR_INSTRUCTIONMETADATA_H
 #define NESEMULATOR_INSTRUCTIONMETADATA_H
 
-#include "CPU/OpCode/Instruction.h"
+#include "CPU/Opcode/Instruction.h"
 
 struct InstructionMetadata {
     // The instruction type (ie LDA, LDX) these have multiple addressing modes
