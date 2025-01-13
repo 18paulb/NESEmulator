@@ -390,6 +390,33 @@ public:
     void executeCLV();
 
     template<typename T>
+    void executeCMP(AddressingMode, T);
+
+    // Compare A - opcode $C9
+    void CMP_Immediate(uint8_t);
+
+    // Compare A - opcode $C5
+    void CMP_ZeroPage(uint8_t);
+
+    // Compare A - opcode $D5
+    void CMP_ZeroPageX(uint8_t);
+
+    // Compare A - opcode $CD
+    void CMP_Absolute(uint16_t);
+
+    // Compare A - opcode $DD
+    void CMP_AbsoluteX(uint16_t);
+
+    // Compare A - opcode $D9
+    void CMP_AbsoluteY(uint16_t);
+
+    // Compare A - opcode $C1
+    void CMP_IndirectX(uint8_t);
+
+    // Compare A - opcode $D1
+    void CMP_IndirectY(uint8_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9

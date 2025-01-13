@@ -89,6 +89,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case CMP:
+            executeCMP(addressingMode, value);
             break;
 
         case CPX:
@@ -826,6 +827,152 @@ void CPU::executeBVS(uint8_t val) {
     }
 }
 
+void CPU::executeCLC() {
+    clearFlag(StatusFlag::Carry);
+}
+
+void CPU::executeCLD() {
+    clearFlag(StatusFlag::Decimal);
+}
+
+void CPU::executeCLI() {
+    clearFlag(StatusFlag::InterruptDisable);
+}
+
+void CPU::executeCLV() {
+    clearFlag(StatusFlag::Overflow);
+}
+
+template<typename T>
+void CPU::executeCMP(AddressingMode mode, T val) {
+    switch (mode) {
+        case Immediate:
+            CMP_Immediate(val);
+            break;
+
+        case ZeroPage:
+            CMP_ZeroPage(val);
+            break;
+
+        case ZeroPageX:
+            CMP_ZeroPageX(val);
+            break;
+
+        case Absolute:
+            CMP_Absolute(val);
+            break;
+
+        case AbsoluteX:
+            CMP_AbsoluteX(val);
+            break;
+
+        case AbsoluteY:
+            CMP_AbsoluteY(val);
+            break;
+
+        case IndirectX:
+            CMP_IndirectX(val);
+            break;
+
+        case IndirectY:
+            CMP_IndirectY(val);
+            break;
+
+        default:
+            cerr << "Invalid addressing mode for CMP" << endl;
+    }
+}
+
+void CPU::CMP_Immediate(uint8_t val) {
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_ZeroPageX(uint8_t address) {
+    uint8_t val = memory[address + xRegister];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_AbsoluteX(uint16_t address) {
+    uint8_t val = memory[address + xRegister];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_AbsoluteY(uint16_t address) {
+    uint8_t val = memory[address + yRegister];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_IndirectX(uint8_t address) {
+    uint8_t indirectAddress = address + xRegister;
+    uint8_t lowByte = memory[indirectAddress];
+    uint8_t highByte = memory[indirectAddress + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+
+    uint8_t val = memory[targetAddress];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CMP_IndirectY(uint8_t address) {
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+    targetAddress += yRegister;
+
+    uint8_t val = memory[targetAddress];
+    uint8_t result = accumulator - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    accumulator >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    accumulator == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+
 
 
 template<typename T>
@@ -1141,22 +1288,6 @@ void CPU::STY_ZeroPageX(uint8_t address) {
 
 void CPU::STY_Absolute(uint16_t address) {
     memory.setMemory(address, yRegister);
-}
-
-void CPU::executeCLC() {
-    clearFlag(StatusFlag::Carry);
-}
-
-void CPU::executeCLD() {
-    clearFlag(StatusFlag::Decimal);
-}
-
-void CPU::executeCLI() {
-    clearFlag(StatusFlag::InterruptDisable);
-}
-
-void CPU::executeCLV() {
-    clearFlag(StatusFlag::Overflow);
 }
 
 void CPU::executeDEY() {
