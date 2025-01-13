@@ -555,6 +555,88 @@ void CPU::AND_IndirectY(uint8_t address) {
     setZeroAndNegativeFlag(accumulator);
 }
 
+// FIXME: Potential Issues
+// 1. Not sure if N and Z flags should be set when changing memory, only accumulator
+template<typename T>
+void CPU::executeASL(AddressingMode mode, T value) {
+    switch (mode) {
+        case Accumulator:
+            ASL_Accumulator(value);
+            break;
+
+        case ZeroPage:
+            ASL_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            ASL_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            ASL_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            ASL_AbsoluteX(value);
+            break;
+
+        default:
+            cerr << "Invalid addressing mode for ASL" << endl;
+    }
+}
+
+void CPU::ASL_Accumulator() {
+    // Capture bit 7 of the accumulator before the shift
+    uint8_t bit7 = GET_BIT(accumulator, 7);
+    accumulator = accumulator << 1;
+
+    // bit 7 of original accumulator is the new value of the carry flag
+    bit7 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ASL_ZeroPage(uint8_t address) {
+    // Capture bit 7 of the accumulator before the shift
+    uint8_t bit7 = GET_BIT(memory[address], 7);
+    memory[address] = memory[address] << 1;
+
+    // bit 7 of original memory value is the new value of the carry flag
+    bit7 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::ASL_ZeroPageX(uint8_t address) {
+    // Capture bit 7 of the accumulator before the shift
+    uint8_t adjustedAddress = address + xRegister;
+    uint8_t bit7 = GET_BIT(memory[adjustedAddress], 7);
+    memory[adjustedAddress] = memory[adjustedAddress] << 1;
+
+    // bit 7 of original memory value is the new value of the carry flag
+    bit7 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[adjustedAddress]);
+}
+
+void CPU::ASL_Absolute(uint16_t address) {
+    // Capture bit 7 of the accumulator before the shift
+    uint8_t bit7 = GET_BIT(memory[address], 7);
+    memory[address] = memory[address] << 1;
+
+    // bit 7 of original memory value is the new value of the carry flag
+    bit7 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[address]);
+}
+
+void CPU::ASL_AbsoluteX(uint16_t address) {
+    // Capture bit 7 of the accumulator before the shift
+    uint16_t adjustedAddress = address + xRegister;
+    uint8_t bit7 = GET_BIT(memory[adjustedAddress], 7);
+    memory[adjustedAddress] = memory[adjustedAddress] << 1;
+
+    // bit 7 of original memory value is the new value of the carry flag
+    bit7 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    setZeroAndNegativeFlag(memory[adjustedAddress]);
+}
+
 
 
 template<typename T>

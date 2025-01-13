@@ -328,6 +328,24 @@ public:
     void AND_IndirectY(uint8_t);
 
     template<typename T>
+    void executeASL(AddressingMode, T);
+
+    // Arithmetic Shift Left - opcode $0A
+    void ASL_Accumulator();
+
+    // Arithmetic Shift Left - opcode $06
+    void ASL_ZeroPage(uint8_t);
+
+    // Arithmetic Shift Left - opcode $16
+    void ASL_ZeroPageX(uint8_t);
+
+    // Arithmetic Shift Left - opcode $oE
+    void ASL_Absolute(uint16_t);
+
+    // Arithmetic Shift Left - opcode $1E
+    void ASL_AbsoluteX(uint16_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
