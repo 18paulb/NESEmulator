@@ -377,6 +377,18 @@ public:
     // Branch if Overflow Set - opcode $70
     void executeBVS(uint8_t);
 
+    // Clear Carry - opcode $18
+    void executeCLC();
+
+    // Clear Decimal - opcode $D8
+    void executeCLD();
+
+    // Clear Interrupt Disable - opcode $58
+    void executeCLI();
+
+    // Clear Overflow - opcode $B8
+    void executeCLV();
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
@@ -487,18 +499,6 @@ public:
 
     // Store Y Register - opcode $8C
     void STY_Absolute(uint16_t);
-
-    // Clear Carry - opcode $18
-    void executeCLC();
-
-    // Clear Decimal - opcode $D8
-    void executeCLD();
-
-    // Clear Interrupt Disable - opcode $58
-    void executeCLI();
-
-    // Clear Overflow - opcode $B8
-    void executeCLV();
 
     // Decrement X - opcode $CA
     void executeDEX();
