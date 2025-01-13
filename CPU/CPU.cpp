@@ -13,13 +13,15 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
     AddressingMode addressingMode = instruction.addressingMode;
     switch (instructionType) {
         case ADC:
-            exeuteADC(instruction, value);
+            executeADC(addressingMode, value);
             break;
 
         case AND:
+            executeAND(addressingMode, value);
             break;
 
         case ASL:
+            executeASL(addressingMode, value);
             break;
 
         case BCC:
@@ -561,7 +563,7 @@ template<typename T>
 void CPU::executeASL(AddressingMode mode, T value) {
     switch (mode) {
         case Accumulator:
-            ASL_Accumulator(value);
+            ASL_Accumulator();
             break;
 
         case ZeroPage:
