@@ -6,7 +6,6 @@
 
 #include <numeric>
 
-// Manually increment PC during cases to add more control to PC since some instructions don't increment
 template<typename T>
 void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value) {
     Instruction instructionType = instruction.instruction;
@@ -1729,6 +1728,53 @@ void CPU::executePLA() {
 */
 void CPU::executePLP() {
     pStatus = popFromStack();
+}
+
+template<typename T>
+void CPU::executeROL(AddressingMode mode, T value) {
+    switch (mode) {
+        case Accumulator:
+            ROL_Accumulator();
+            break;
+
+        case ZeroPage:
+            ROL_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            ROL_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            ROL_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            ROL_AbsoluteX(value);
+            break;
+
+        default:
+            cerr << "Invalid addressing mode for ASL" << endl;
+    }
+}
+
+void CPU::ROL_Accumulator() {
+}
+
+void CPU::ROL_ZeroPage(uint8_t address) {
+
+}
+
+void CPU::ROL_ZeroPageX(uint8_t address) {
+
+}
+
+void CPU::ROL_Absolute(uint16_t address) {
+
+}
+
+void CPU::ROL_AbsoluteX(uint16_t address) {
+
 }
 
 template<typename T>

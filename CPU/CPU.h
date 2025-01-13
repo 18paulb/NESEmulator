@@ -64,8 +64,6 @@ private:
 public:
 
     CPU() : SystemPart() {
-        // This is the reset vector, and it should give the starting location of the PC
-        // Lower byte starts at 0xFFC and high byte at 0xFFFD, combine
         cycle = 0;
 
         accumulator = 0;
@@ -651,6 +649,24 @@ public:
 
     // Pull Processor Status - opcode $28
     void executePLP();
+
+    template<typename T>
+    void executeROL(AddressingMode, T);
+
+    // Arithmetic Shift Left - opcode $2A
+    void ROL_Accumulator();
+
+    // Arithmetic Shift Left - opcode $26
+    void ROL_ZeroPage(uint8_t);
+
+    // Arithmetic Shift Left - opcode $36
+    void ROL_ZeroPageX(uint8_t);
+
+    // Arithmetic Shift Left - opcode $2E
+    void ROL_Absolute(uint16_t);
+
+    // Arithmetic Shift Left - opcode $3E
+    void ROL_AbsoluteX(uint16_t);
 
     template<typename T>
     void executeSTA(AddressingMode, T);
