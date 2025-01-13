@@ -157,6 +157,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case ORA:
+            executeORA(addressingMode, value);
             break;
 
         case PHA:
@@ -1597,6 +1598,104 @@ void CPU::LSR_AbsoluteX(uint16_t address) {
     // bit 0 of original memory value is the new value of the carry flag
     bit0 != 0 ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
     setZeroAndNegativeFlag(memory[adjustedAddress]);
+}
+
+
+template<typename T>
+void CPU::executeORA(AddressingMode mode, T value) {
+    switch (mode) {
+        case Immediate:
+            ORA_Immediate(value);
+            break;
+
+        case ZeroPage:
+            ORA_ZeroPage(value);
+            break;
+
+        case ZeroPageX:
+            ORA_ZeroPageX(value);
+            break;
+
+        case Absolute:
+            ORA_Absolute(value);
+            break;
+
+        case AbsoluteX:
+            ORA_AbsoluteX(value);
+            break;
+
+        case AbsoluteY:
+            ORA_AbsoluteY(value);
+            break;
+
+        case IndirectX:
+            ORA_IndirectX(value);
+            break;
+
+        case IndirectY:
+            ORA_IndirectY(value);
+            break;
+
+        default:
+            cout << "Invalid addressing mode for EOR" << endl;
+    }
+}
+
+void CPU::ORA_Immediate(uint8_t val) {
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_ZeroPageX(uint8_t address) {
+    uint8_t val = memory[address + xRegister];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_AbsoluteX(uint16_t address) {
+    uint8_t val = memory[address + xRegister];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_AbsoluteY(uint16_t address) {
+    uint8_t val = memory[address + yRegister];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_IndirectX(uint8_t address) {
+    uint8_t indirectAddress = address + xRegister;
+    uint8_t lowByte = memory[indirectAddress];
+    uint8_t highByte = memory[indirectAddress + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+
+    uint8_t val = memory[targetAddress];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
+}
+
+void CPU::ORA_IndirectY(uint8_t address) {
+    uint8_t lowByte = memory[address];
+    uint8_t highByte = memory[address + 1];
+    uint16_t targetAddress = (highByte << 8) | lowByte;
+    targetAddress += yRegister;
+
+    uint8_t val = memory[targetAddress];
+    accumulator |= val;
+    setZeroAndNegativeFlag(accumulator);
 }
 
 template<typename T>

@@ -603,6 +603,33 @@ public:
     void LSR_AbsoluteX(uint16_t);
 
     template<typename T>
+    void executeORA(AddressingMode, T);
+
+    // Bitwise OR - opcode $09
+    void ORA_Immediate(uint8_t);
+
+    // Bitwise OR - opcode $05
+    void ORA_ZeroPage(uint8_t);
+
+    // Bitwise OR - opcode $15
+    void ORA_ZeroPageX(uint8_t);
+
+    // Bitwise OR - opcode $0D
+    void ORA_Absolute(uint16_t);
+
+    // Bitwise OR - opcode $1D
+    void ORA_AbsoluteX(uint16_t);
+
+    // Bitwise OR - opcode $19
+    void ORA_AbsoluteY(uint16_t);
+
+    // Bitwise OR - opcode $01
+    void ORA_IndirectX(uint8_t);
+
+    // Bitwise OR - opcode $11
+    void ORA_IndirectY(uint8_t);
+
+    template<typename T>
     void executeSTA(AddressingMode, T);
 
     // Store Accumulator - opcode $85
