@@ -25,12 +25,15 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case BCC:
+            executeBCC(value);
             break;
 
         case BCS:
+            executeBCS(value);
             break;
 
         case BEQ:
+            executeBEQ(value);
             break;
 
         case BIT:
@@ -639,7 +642,50 @@ void CPU::ASL_AbsoluteX(uint16_t address) {
     setZeroAndNegativeFlag(memory[adjustedAddress]);
 }
 
+/*
+ If the carry flag is clear, BCC branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
 
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBCC(uint8_t val) {
+    if (!isFlagSet(StatusFlag::Carry)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+/*
+ If the carry flag is set, BCS branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBCS(uint8_t val) {
+    if (isFlagSet(StatusFlag::Carry)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
+
+/*
+ If the zero flag is set, BEQ branches to a nearby location by adding the branch offset to the program counter.
+ The offset is signed and has a range of [-128, 127] relative to the first byte after the branch instruction.
+
+ Important: Some docs say to add + 2 + offset to PC, but since we increment PC during fetch cycles, we don't need to add
+ the + 2 since it is already incremented to the next instruction
+*/
+//FIXME: Potential Issues
+void CPU::executeBEQ(uint8_t val) {
+    if (isFlagSet(StatusFlag::Zero)) {
+        auto displacement = static_cast<int8_t>(val);
+        programCounter += displacement;
+    }
+}
 
 template<typename T>
 void CPU::executeBIT(T address) {

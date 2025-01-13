@@ -345,6 +345,15 @@ public:
     // Arithmetic Shift Left - opcode $1E
     void ASL_AbsoluteX(uint16_t);
 
+    // Branch if Carry Clear - opcode $90
+    void executeBCC(uint8_t);
+
+    // Branch if Carry Set - opcode $B0
+    void executeBCS(uint8_t);
+
+    // Branch if Equal - opcode $F0
+    void executeBEQ(uint8_t);
+
     template<typename T>
     void executeLDA(AddressingMode, T);
 
