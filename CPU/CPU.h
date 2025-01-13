@@ -274,6 +274,33 @@ public:
     void delegateInstructionExecution(InstructionMetadata, T);
 
     template<typename T>
+    void executeADC(AddressingMode, T);
+
+    // Add with Carry - opcode $69
+    void ADC_Immediate(uint8_t);
+
+    // Add with Carry - opcode $65
+    void ADC_ZeroPage(uint8_t);
+
+    // Add with Carry - opcode $75
+    void ADC_ZeroPageX(uint8_t);
+
+    // Add with Carry - opcode $6D
+    void ADC_Absolute(uint16_t);
+
+    // Add with Carry - opcode $7D
+    void ADC_AbsoluteX(uint16_t);
+
+    // Add with Carry - opcode $79
+    void ADC_AbsoluteY(uint16_t);
+
+    // Add with Carry - opcode $61
+    void ADC_IndirectX(uint8_t);
+
+    // Add with Carry - opcode $71
+    void ADC_IndirectY(uint8_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
