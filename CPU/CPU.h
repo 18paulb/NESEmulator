@@ -429,6 +429,18 @@ public:
     void CPX_Absolute(uint16_t);
 
     template<typename T>
+    void executeCPY(AddressingMode, T);
+
+    // Compare Y - opcode $C0
+    void CPY_Immediate(uint8_t);
+
+    // Compare Y - opcode $C4
+    void CPY_ZeroPage(uint8_t);
+
+    // Compare Y - opcode $CC
+    void CPY_Absolute(uint16_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9

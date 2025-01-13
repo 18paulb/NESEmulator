@@ -93,9 +93,11 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case CPX:
+            executeCPX(addressingMode, value);
             break;
 
         case CPY:
+            executeCPY(addressingMode, value);
             break;
 
         case DEC:
@@ -1021,9 +1023,54 @@ void CPU::CPX_Absolute(uint16_t address) {
     bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
 }
 
+template<typename T>
+void CPU::executeCPY(AddressingMode mode, T value) {
+    switch (mode) {
+        case Immediate:
+            CPY_Immediate(value);
+        break;
 
+        case ZeroPage:
+            CPY_ZeroPage(value);
+        break;
 
+        case Absolute:
+            CPY_Absolute(value);
+        break;
 
+        default:
+            cout << "Invalid addressing mode for CPX" << endl;
+    }
+}
+
+void CPU::CPY_Immediate(uint8_t val) {
+    uint8_t result = yRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    yRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    yRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CPY_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = yRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    yRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    yRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
+
+void CPU::CPY_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    uint8_t result = yRegister - val;
+    uint8_t bit7 = GET_BIT(result, 7);
+
+    yRegister >= val ? setFlag(StatusFlag::Carry) : clearFlag(StatusFlag::Carry);
+    yRegister == val ? setFlag(StatusFlag::Zero) : clearFlag(StatusFlag::Zero);
+    bit7 != 0 ? setFlag(StatusFlag::Negative) : clearFlag(StatusFlag::Negative);
+}
 
 template<typename T>
 void CPU::executeLDA(AddressingMode mode, T value) {
