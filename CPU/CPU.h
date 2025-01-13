@@ -462,6 +462,33 @@ public:
     void executeDEY();
 
     template<typename T>
+    void executeEOR(AddressingMode, T);
+
+    // Bitwise Exclusive OR - opcode $49
+    void EOR_Immediate(uint8_t);
+
+    // Bitwise Exclusive OR - opcode $45
+    void EOR_ZeroPage(uint8_t);
+
+    // Bitwise Exclusive OR - opcode $55
+    void EOR_ZeroPageX(uint8_t);
+
+    // Bitwise Exclusive OR - opcode $4D
+    void EOR_Absolute(uint16_t);
+
+    // Bitwise Exclusive OR - opcode $5D
+    void EOR_AbsoluteX(uint16_t);
+
+    // Bitwise Exclusive OR - opcode $59
+    void EOR_AbsoluteY(uint16_t);
+
+    // Bitwise Exclusive OR - opcode $41
+    void EOR_IndirectX(uint8_t);
+
+    // Bitwise Exclusive OR - opcode $51
+    void EOR_IndirectY(uint8_t);
+
+    template<typename T>
     void executeLDA(AddressingMode, T);
 
     // Load Accumulator - opcode $A9
