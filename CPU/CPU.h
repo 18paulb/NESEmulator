@@ -23,6 +23,7 @@ using namespace std;
 #define FLAG_I (1 << 2)    // Interrupt Disable
 #define FLAG_D (1 << 3)    // Decimal
 #define FLAG_B (1 << 4)    // Break
+#define FLAG_EXTRA (1 << 5) // Extra Bit
 #define FLAG_V (1 << 6)    // Overflow
 #define FLAG_N (1 << 7)    // Negative
 
@@ -72,6 +73,7 @@ public:
         yRegister = 0;
         programCounter = 0;
         pStatus = 0;
+        setFlag(StatusFlag::EXTRA);
 
         // FROM NES docs:
         // IMPORTANT: When pushing to stack make sure to add offset of $0100.
@@ -185,6 +187,9 @@ public:
             case Decimal:
                 pStatus |= FLAG_D;
                 break;
+            case EXTRA:
+                pStatus |= FLAG_EXTRA;
+                break;
             case Overflow:
                 pStatus |= FLAG_V;
                 break;
@@ -218,6 +223,9 @@ public:
             case Decimal:
                 pStatus &= ~FLAG_D;
                 break;
+            case EXTRA:
+                pStatus &= ~FLAG_EXTRA;
+                break;
             case Overflow:
                 pStatus &= ~FLAG_V;
                 break;
@@ -245,6 +253,9 @@ public:
 
             case Decimal:
                 return pStatus & FLAG_D;
+
+            case EXTRA:
+                return pStatus & FLAG_EXTRA;
 
             case Overflow:
                 return pStatus & FLAG_V;
@@ -631,6 +642,9 @@ public:
 
     // Push A - opcode $48
     void executePHA();
+
+    // Push Processor Status - opcode $08
+    void executePHP();
 
     template<typename T>
     void executeSTA(AddressingMode, T);

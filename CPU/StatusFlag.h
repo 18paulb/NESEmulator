@@ -16,6 +16,7 @@ enum StatusFlag {
     Break,
     // (D) Set to switch the 6502 into BCD mode
     Decimal,
+    EXTRA, // Extra bit that does nothing
     // (V) Set if an invalid two's complement results was obtained by the previous instruction
     // This means that a negative result has been obtained when a positive one was expected or vice versa.
     Overflow,
