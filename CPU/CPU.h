@@ -162,7 +162,7 @@ public:
     }
 
     uint8_t popFromStack() {
-        return memory[STACK_POINTER_OFFSET + stackPointer++];
+        return memory[STACK_POINTER_OFFSET + ++stackPointer];
     }
 
     /*
