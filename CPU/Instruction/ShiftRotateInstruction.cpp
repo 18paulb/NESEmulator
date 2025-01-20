@@ -177,23 +177,23 @@ void CPU::executeROL(AddressingMode mode, T value) {
     switch (mode) {
         case Accumulator:
             ROL_Accumulator();
-        break;
+            break;
 
         case ZeroPage:
             ROL_ZeroPage(value);
-        break;
+            break;
 
         case ZeroPageX:
             ROL_ZeroPageX(value);
-        break;
+            break;
 
         case Absolute:
             ROL_Absolute(value);
-        break;
+            break;
 
         case AbsoluteX:
             ROL_AbsoluteX(value);
-        break;
+            break;
 
         default:
             cerr << "Invalid addressing mode for ROL" << endl;
@@ -203,20 +203,77 @@ template void CPU::executeROL<uint8_t>(AddressingMode addressingMode, uint8_t va
 template void CPU::executeROL<uint16_t>(AddressingMode addressingMode, uint16_t value);
 
 void CPU::ROL_Accumulator() {
+    uint8_t bit7 = GET_BIT(accumulator, 7);
+    uint8_t carryFlag = isFlagSet(StatusFlag::Carry);
+    // The value of the carryFlag is shifted to bit 0
+    accumulator = (accumulator << 1) | (carryFlag);
+
+    // The value of bit7 is now shifted into carryFlag
+    bit7 == 0 ? clearFlag(StatusFlag::Carry) : setFlag(StatusFlag::Carry);
+
+    // Carry Flag, Negative Flag, and Zero flags should be changed
+    setZeroAndNegativeFlag(accumulator);
 }
 
 void CPU::ROL_ZeroPage(uint8_t address) {
+    uint8_t val = memory[address];
+    uint8_t bit7 = GET_BIT(val, 7);
+    uint8_t carryFlag = isFlagSet(StatusFlag::Carry);
+    // The value of the carryFlag is shifted to bit 0
+    val = (val << 1) | (carryFlag);
+    memory[address] = val;
 
+    // The value of bit7 is now shifted into carryFlag
+    bit7 == 0 ? clearFlag(StatusFlag::Carry) : setFlag(StatusFlag::Carry);
+
+    // Carry Flag, Negative Flag, and Zero flags should be changed
+    setZeroAndNegativeFlag(val);
 }
 
 void CPU::ROL_ZeroPageX(uint8_t address) {
+    uint8_t adjustedAddress = address + xRegister;
+    uint8_t val = memory[adjustedAddress];
+    uint8_t bit7 = GET_BIT(val, 7);
+    uint8_t carryFlag = isFlagSet(StatusFlag::Carry);
+    // The value of the carryFlag is shifted to bit 0
+    val = (val << 1) | (carryFlag);
+    memory[adjustedAddress] = val;
+
+    // The value of bit7 is now shifted into carryFlag
+    bit7 == 0 ? clearFlag(StatusFlag::Carry) : setFlag(StatusFlag::Carry);
+
+    // Carry Flag, Negative Flag, and Zero flags should be changed
+    setZeroAndNegativeFlag(val);
 
 }
 
 void CPU::ROL_Absolute(uint16_t address) {
+    uint8_t val = memory[address];
+    uint8_t bit7 = GET_BIT(val, 7);
+    uint8_t carryFlag = isFlagSet(StatusFlag::Carry);
+    // The value of the carryFlag is shifted to bit 0
+    val = (val << 1) | (carryFlag);
+    memory[address] = val;
 
+    // The value of bit7 is now shifted into carryFlag
+    bit7 == 0 ? clearFlag(StatusFlag::Carry) : setFlag(StatusFlag::Carry);
+
+    // Carry Flag, Negative Flag, and Zero flags should be changed
+    setZeroAndNegativeFlag(val);
 }
 
 void CPU::ROL_AbsoluteX(uint16_t address) {
+    uint8_t adjustedAddress = address + xRegister;
+    uint8_t val = memory[adjustedAddress];
+    uint8_t bit7 = GET_BIT(val, 7);
+    uint8_t carryFlag = isFlagSet(StatusFlag::Carry);
+    // The value of the carryFlag is shifted to bit 0
+    val = (val << 1) | (carryFlag);
+    memory[adjustedAddress] = val;
 
+    // The value of bit7 is now shifted into carryFlag
+    bit7 == 0 ? clearFlag(StatusFlag::Carry) : setFlag(StatusFlag::Carry);
+
+    // Carry Flag, Negative Flag, and Zero flags should be changed
+    setZeroAndNegativeFlag(val);
 }
