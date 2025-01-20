@@ -174,9 +174,11 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case ROL:
+            executeROL(addressingMode, value);
             break;
 
         case ROR:
+            executeROR(addressingMode, value);
             break;
 
         case RTI:

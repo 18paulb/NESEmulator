@@ -576,6 +576,24 @@ public:
     void ROL_AbsoluteX(uint16_t);
 
     template<typename T>
+    void executeROR(AddressingMode, T);
+
+    // Arithmetic Shift Left - opcode $6A
+    void ROR_Accumulator();
+
+    // Arithmetic Shift Left - opcode $66
+    void ROR_ZeroPage(uint8_t);
+
+    // Arithmetic Shift Left - opcode $76
+    void ROR_ZeroPageX(uint8_t);
+
+    // Arithmetic Shift Left - opcode $6E
+    void ROR_Absolute(uint16_t);
+
+    // Arithmetic Shift Left - opcode $7E
+    void ROR_AbsoluteX(uint16_t);
+
+    template<typename T>
     void executeSTA(AddressingMode, T);
 
     // Store Accumulator - opcode $85
