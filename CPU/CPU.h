@@ -593,6 +593,9 @@ public:
     // Arithmetic Shift Left - opcode $7E
     void ROR_AbsoluteX(uint16_t);
 
+    // Return from Interrupt - opcode $40
+    void executeRTI();
+
     template<typename T>
     void executeSTA(AddressingMode, T);
 

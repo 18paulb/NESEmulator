@@ -46,3 +46,17 @@ void CPU::executeBRK() {
 
     programCounter = val;
 }
+
+void CPU::executeRTI() {
+    uint8_t statusFlags = popFromStack();
+
+    // Clear the Break Flag
+    statusFlags &= ~FLAG_B;
+
+    pStatus = statusFlags;
+
+    uint8_t lowByte = popFromStack();
+    uint8_t highByte = popFromStack();
+
+    programCounter = (highByte << 8) | lowByte;
+}
