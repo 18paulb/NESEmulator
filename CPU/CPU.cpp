@@ -186,6 +186,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case RTS:
+            executeRTS();
             break;
 
         case SBC:

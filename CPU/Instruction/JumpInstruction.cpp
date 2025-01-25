@@ -61,3 +61,11 @@ void CPU::executeJSR(uint16_t address) {
 
     programCounter = address;
 }
+
+void CPU::executeRTS() {
+    uint8_t lowByte = popFromStack();
+    uint8_t highByte = popFromStack();
+
+    programCounter = (highByte << 8) | lowByte;
+    programCounter += 1;
+}

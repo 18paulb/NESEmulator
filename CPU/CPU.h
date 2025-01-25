@@ -596,6 +596,9 @@ public:
     // Return from Interrupt - opcode $40
     void executeRTI();
 
+    // Return from Subroutine - opcode $60
+    void executeRTS();
+
     template<typename T>
     void executeSTA(AddressingMode, T);
 
