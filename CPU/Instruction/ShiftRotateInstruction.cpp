@@ -305,8 +305,8 @@ void CPU::executeROR(AddressingMode mode, T value) {
             cerr << "Invalid addressing mode for ROL" << endl;
     }
 }
-template void CPU::executeROL<uint8_t>(AddressingMode addressingMode, uint8_t value);
-template void CPU::executeROL<uint16_t>(AddressingMode addressingMode, uint16_t value);
+template void CPU::executeROR<uint8_t>(AddressingMode addressingMode, uint8_t value);
+template void CPU::executeROR<uint16_t>(AddressingMode addressingMode, uint16_t value);
 
 void CPU::ROR_Accumulator() {
     uint8_t bit0 = GET_BIT(accumulator, 0);
