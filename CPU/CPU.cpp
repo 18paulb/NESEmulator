@@ -190,6 +190,7 @@ void CPU::delegateInstructionExecution(InstructionMetadata instruction, T value)
             break;
 
         case SBC:
+            executeSBC(addressingMode, value);
             break;
 
         case SEC:

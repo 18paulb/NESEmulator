@@ -600,6 +600,25 @@ public:
     void executeRTS();
 
     template<typename T>
+    void executeSBC(AddressingMode, T);
+
+    void SBC_Immediate(uint8_t);
+
+    void SBC_ZeroPage(uint8_t);
+
+    void SBC_ZeroPageX(uint8_t);
+
+    void SBC_Absolute(uint16_t);
+
+    void SBC_AbsoluteX(uint16_t);
+
+    void SBC_AbsoluteY(uint16_t);
+
+    void SBC_IndirectX(uint8_t);
+
+    void SBC_IndirectY(uint8_t);
+
+    template<typename T>
     void executeSTA(AddressingMode, T);
 
     // Store Accumulator - opcode $85
