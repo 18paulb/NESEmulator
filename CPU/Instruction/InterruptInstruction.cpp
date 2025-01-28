@@ -32,8 +32,7 @@ void CPU::executeBRK() {
     uint8_t tmpPStatus = pStatus;
     // Manually do the bitwise operation here so that the original pStatus is not altered
     tmpPStatus |= FLAG_B;
-    setMemory(STACK_POINTER_OFFSET + stackPointer, tmpPStatus);
-    stackPointer--;
+    pushToStack(tmpPStatus);
 
     // 3.
     setFlag(StatusFlag::InterruptDisable);
