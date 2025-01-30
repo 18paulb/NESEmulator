@@ -1,12 +1,12 @@
 //
 // Created by Brandon Paul on 4/24/24.
 //
+
+#include "System/System.h"
 #include<iostream>
 
-using namespace std;
 
-#include <vector>
-#include "System/System.h"
+using namespace std;
 
 int main(const int argc, char *argv[]) {
 
@@ -24,12 +24,6 @@ int main(const int argc, char *argv[]) {
             nes.getCPU());
 
     nes.getCPU().initializeProgramCounter();
-
-    // for (int i = 0; i < 65536; ++i) {
-    //     if (nes.getCPU().getMemory(i) != '\0') {
-    //         cout << i << ": " << nes.getCPU().getMemory(i) << endl;
-    //     }
-    // }
 
     nes.step(1);
 

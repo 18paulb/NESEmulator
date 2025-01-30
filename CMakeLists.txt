@@ -5,14 +5,16 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-# Main executable
-add_executable(NESEmulator
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
+set(COMMON_SOURCES
         CPU/CPU.cpp
         CPU/CPU.h
         CPU/Opcode/AddressingMode.h
         CPU/StatusFlag.h
-        main.cpp
-        tests/tests.cpp
         System/System.h
         System/System.cpp
         CPU/Memory/Memory.h
@@ -37,18 +39,18 @@ add_executable(NESEmulator
         HelperClasses/InstructionMetadata.h
 )
 
+# Main executable
+add_executable(NESEmulator
+        ${COMMON_SOURCES}
+        main.cpp
+)
+
 # Test executable
-#add_executable(NESEmulatorTests
-#        CPU.cpp
-#        CPU.h
-#        AddressingMode.h
-#        StatusFlag.h
-#        tests/tests.cpp
-#)
-#
-## Optionally, you can use target_include_directories to include directories for specific targets
-#target_include_directories(NESEmulatorTests PRIVATE tests)
-#
-## Optionally, you can use target_link_libraries if your test executable depends on external libraries
-## For example:
-## target_link_libraries(NESEmulatorTests some_external_library)
+add_executable(NESEmulatorTests
+        ${COMMON_SOURCES}
+        tests/tests_main.cpp
+        tests/utils/JsonTestReader.h
+)
+
+target_link_libraries(NESEmulator PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(NESEmulatorTests PRIVATE nlohmann_json::nlohmann_json)

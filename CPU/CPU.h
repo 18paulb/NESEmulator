@@ -81,6 +81,17 @@ public:
         stackPointer = 0xFF;
     }
 
+    // This constructor is purely for testing purposes
+    CPU(uint16_t pc, uint8_t stackPointer, uint8_t accumulator, uint8_t xRegister, uint8_t yRegister, uint8_t pStatus) : SystemPart() {
+        this->programCounter = pc;
+        this->stackPointer = stackPointer;
+        this->accumulator = accumulator;
+        this->xRegister = xRegister;
+        this->yRegister = yRegister;
+        this->pStatus = pStatus;
+        this->cycle = 0;
+    }
+
     void initializeProgramCounter() {
         // When ROM is loaded, look at address 0xFFFC & 0xFFFD in order to find reset vector
         uint8_t lsb = memory[0xFFFC]; // LSB of the reset vector
@@ -131,15 +142,16 @@ public:
 
             delegateInstructionExecution(instruction, val);
         }
-
-        // Grabbing the next bytes from memory for the data
-        // cycle++;
     }
 
     void step_to(int newCount) override {
         while (cycle < newCount) {
             executeInstruction();
         }
+    }
+
+    uint16_t getProgramCounter() const {
+        return programCounter;
     }
 
     uint8_t getXRegister() const {
@@ -152,6 +164,10 @@ public:
 
     uint8_t getAccumulator() const {
         return accumulator;
+    }
+
+    uint8_t getPStatus() const {
+        return pStatus;
     }
 
     void pushToStack(uint8_t value) {
