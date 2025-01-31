@@ -39,7 +39,7 @@ void CPU::executeBRK() {
 
     // 4.
     lowByte = memory[0xFFFE];
-    highByte = memory[0xFFFD];
+    highByte = memory[0xFFFF];
     // Combine the two bytes together using bit shifting
     uint16_t val = (highByte << 8) | lowByte;
 
