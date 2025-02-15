@@ -3,3 +3,4 @@ cmake-build-debug
 *nes-test-roms
 .DS_Store
 tests/nes-test-roms/*
+memoryOutput.txt
