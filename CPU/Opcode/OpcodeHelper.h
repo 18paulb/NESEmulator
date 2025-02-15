@@ -8,7 +8,7 @@
 #include <cstdint>
 
 #include "AddressingMode.h"
-#include "HelperClasses/InstructionMetadata.h"
+#include "CPU/HelperClasses/InstructionMetadata.h"
 
 class OpcodeHelper {
 public:

@@ -17,8 +17,7 @@ set(COMMON_SOURCES
         CPU/StatusFlag.h
         System/System.h
         System/System.cpp
-        CPU/Memory/Memory.h
-        CPU/Memory/Memory.cpp
+        Memory/Memory.h
         CPU/Instruction/TransferInstruction.cpp
         CPU/Instruction/StackInstruction.cpp
         CPU/Instruction/DecrementIncrementInstruction.cpp
@@ -36,7 +35,7 @@ set(COMMON_SOURCES
         CPU/Opcode/OpcodeHelper.h
         System/SystemPart.h
         CPU/Opcode/Instruction.h
-        HelperClasses/InstructionMetadata.h
+        CPU/HelperClasses/InstructionMetadata.h
 )
 
 # Main executable

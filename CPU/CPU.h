@@ -11,7 +11,7 @@
 
 #include "StatusFlag.h"
 #include "CPU/Opcode/AddressingMode.h"
-#include "CPU/Memory/Memory.h"
+#include "Memory/Memory.h"
 #include "System/SystemPart.h"
 #include "CPU/Opcode/OpcodeHelper.h"
 
