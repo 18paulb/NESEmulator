@@ -6,6 +6,7 @@
 #define NESEMULATOR_CPU_H
 
 #include <cstdint>
+#include <fstream>
 #include <iostream>
 
 #include "StatusFlag.h"
@@ -59,12 +60,15 @@ private:
     // Memory storage, 6502 has a total of 64 KB of memory (up to a 16-bit address)
     Memory memory = Memory();
 
+    int debugCounter;
+
     int cycle;
 
 public:
 
     CPU() : SystemPart() {
         cycle = 0;
+        debugCounter = 0;
 
         accumulator = 0;
         xRegister = 0;
@@ -142,7 +146,37 @@ public:
 
             delegateInstructionExecution(instruction, val);
         }
+
+        debugCounter++;
+        if (debugCounter == 100) {
+            printMemory();
+            debugCounter = 0;
+        }
     }
+
+    void printMemory() {
+        string filename = "memoryOutput.txt";
+        std::ofstream outFile(filename);
+        if (!outFile) {
+            std::cerr << "Error opening file: " << filename;
+            return;
+        }
+
+        uint8_t* memPtr = memory.getMemory();
+        for (int i = 0; i < 65536; i++) {
+            if (memPtr[i] != 0) {
+                // Print address and value in hex
+                outFile << "0x" << std::hex << std::setw(4) << std::setfill('0') << i
+                       << ": " << std::setw(2) << static_cast<int>(memPtr[i])
+                       << " (dec: " << std::dec << static_cast<int>(memPtr[i]) << ")"
+                       << " (char: " << (isprint(memPtr[i]) ? static_cast<char>(memPtr[i]) : '.')
+                       << ")" << std::endl;
+            }
+        }
+
+        outFile.close();
+    }
+
 
     void step_to(int newCount) override {
         while (cycle < newCount) {

@@ -10,7 +10,7 @@
 class Memory {
 
 private:
-    uint8_t memory[65536];
+    uint8_t memory[65536] = {};
 
 public:
 
@@ -21,6 +21,10 @@ public:
     // Overload the [] operator for easier access
     uint8_t &operator[](uint16_t address) {
         return memory[address];
+    }
+
+    uint8_t* getMemory() {
+        return memory;
     }
 
 };
