@@ -11,7 +11,7 @@
 
 #include "StatusFlag.h"
 #include "CPU/Opcode/AddressingMode.h"
-#include "CPU/Memory/Memory.h"
+#include "Memory/Memory.h"
 #include "System/SystemPart.h"
 #include "CPU/Opcode/OpcodeHelper.h"
 
@@ -105,6 +105,8 @@ public:
         uint16_t resetVectorAddress = (msb << 8) | lsb;
 
         programCounter = resetVectorAddress;
+
+        programCounter = 0xC000;
     };
 
     uint8_t getMemory(uint16_t address) {
@@ -202,6 +204,10 @@ public:
 
     uint8_t getPStatus() const {
         return pStatus;
+    }
+
+    uint8_t getStackPointer() const {
+        return stackPointer;
     }
 
     void pushToStack(uint8_t value) {

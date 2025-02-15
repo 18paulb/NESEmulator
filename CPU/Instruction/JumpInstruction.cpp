@@ -24,7 +24,7 @@ template void CPU::executeJMP<uint16_t>(AddressingMode addressingMode, uint16_t 
 
 
 void CPU::JMP_Absolute(uint16_t address) {
-    programCounter = memory[address];
+    programCounter = address;
 }
 
 /*
@@ -38,7 +38,7 @@ void CPU::JMP_Indirect(uint16_t address) {
     uint8_t highByte = memory[address + 1];
     uint16_t targetAddress = highByte << 8 | lowByte;
 
-    programCounter = memory[targetAddress];
+    programCounter = targetAddress;
 }
 
 /*
