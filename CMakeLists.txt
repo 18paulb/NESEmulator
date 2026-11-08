@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.26)
 project(NESEmulator)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 include_directories(.)
 
 include(FetchContent)
 
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
-FetchContent_MakeAvailable(json)
+FetchContent_Declare(googletest URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.zip)
+FetchContent_MakeAvailable(json googletest)
 
 set(COMMON_SOURCES
         CPU/CPU.cpp
@@ -53,4 +54,10 @@ add_executable(NESEmulatorTests
 )
 
 target_link_libraries(NESEmulator PRIVATE nlohmann_json::nlohmann_json)
-target_link_libraries(NESEmulatorTests PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(NESEmulatorTests PRIVATE nlohmann_json::nlohmann_json GTest::gtest_main)
+target_compile_definitions(NESEmulatorTests PRIVATE TEST_DATA_DIR="${CMAKE_SOURCE_DIR}/tests/JSONTests")
+
+# Register the GoogleTest tests with CTest so `ctest` and CLion can find them
+enable_testing()
+include(GoogleTest)
+gtest_discover_tests(NESEmulatorTests)

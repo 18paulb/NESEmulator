@@ -1,89 +1,97 @@
 //
 // Created by Brandon Paul on 10/16/24.
 //
+// CPU tests driven by the per-opcode JSON files in tests/JSONTests (SingleStepTests format).
+// Each JSON file becomes one GoogleTest test; every case inside it is checked, and failures
+// are reported with the case name (e.g. "00 35 26").
+//
 
-#include<string>
+#include <gtest/gtest.h>
+
+#include <algorithm>
+#include <filesystem>
+#include <sstream>
+#include <string>
+#include <vector>
 
 #include "System/System.h"
 #include "utils/JsonTestReader.h"
 
-#include <stdexcept>
+namespace {
 
-using namespace std;
+// After this many failing cases in one opcode file, stop printing details (still counted)
+constexpr int kMaxReportedFailures = 10;
 
-void assertEqual(const string &name, int expected, int actual);
-
-class ValuesNotEqualException final : public std::exception {
-public:
-    ValuesNotEqualException(const string& name, int expected, int actual) {
-        this->name = name;
-        this->expected = expected;
-        this->actual = actual;
-    }
-
-    const char *what() const noexcept override {
-        return (name + " Expected: " + std::to_string(expected) +
-                " does not match CPU Result: " + std::to_string(actual) + "\n").c_str();
-    }
-
-private:
-    int expected;
-    int actual;
-    string name;
-};
-
-
-int main(const int argc, char *argv[]) {
-    string file = "/Users/brandonpaul/CS/PersonalProjects/NESEmulator/tests/JSONTests/00.json";
-
-    // Read in the JSON file and parse all the data
-    auto testReader = JsonTestReader(file);
-
-    // Because these are tests, we are going to skip all the ROM/PC initializing
-
-    // Go through every single test parsed from that file
-    for (const auto& test : testReader.getTests()) {
-        // Set CPU values
-        State initial = test.initial;
-        State final = test.final;
-
-        auto testCPU = CPU(initial.pc, initial.stackPointer, initial.accumulator, initial.xRegister,
-                           initial.yRegister, initial.pStatus);
-
-        // Sets the memory for the initial CPU state
-        for (auto memoryVal : initial.ram) {
-            testCPU.setMemory(memoryVal[0], memoryVal[1]);
-        }
-
-        // Run Instructions
-        for (int j = 0; j < test.cycles.size(); j++) {
-            testCPU.executeInstruction();
-        }
-
-        // Verify that CPU registers matches final state
-        assertEqual("PC", final.pc, testCPU.getProgramCounter());
-        assertEqual("Accumulator", final.accumulator, testCPU.getAccumulator());
-        assertEqual("X Register", final.xRegister, testCPU.getXRegister());
-        assertEqual("Y Register", final.yRegister, testCPU.getYRegister());
-        assertEqual("P Status", final.pStatus, testCPU.getPStatus());
-        assertEqual("Stack Pointer", final.stackPointer, testCPU.getStackPointer());
-
-        // Verify that CPU memory matches final state
-        for (int j = 0; j < final.ram.size(); j++) {
-            vector<int> memoryVal = initial.ram[j];
-            uint8_t cpuMemory = testCPU.getMemory(memoryVal[0]);
-            assertEqual("Memory Value", memoryVal[1], cpuMemory);
+// Find every *.json file in the test data folder, e.g. {"00", "01", ...}
+std::vector<std::string> findOpcodeFiles() {
+    std::vector<std::string> names;
+    for (const auto& entry : std::filesystem::directory_iterator(TEST_DATA_DIR)) {
+        if (entry.path().extension() == ".json") {
+            names.push_back(entry.path().stem().string());
         }
     }
-
-    return 0;
+    std::sort(names.begin(), names.end());
+    return names;
 }
 
-void assertEqual(const string &name, int expected, int actual) {
-    if (expected == actual) {
-        cout << name << " matches expected final state\n";
-    } else {
-        cout << name << " does not match expected final state\n";
-        // throw ValuesNotEqualException(name, expected, actual);
+// Compares one value and records a readable line if it differs
+void check(std::ostringstream& mismatches, const std::string& field, int expected, int actual) {
+    if (expected != actual) {
+        mismatches << "  " << field << ": expected " << expected << ", got " << actual << "\n";
     }
 }
+
+}  // namespace
+
+class OpcodeTest : public ::testing::TestWithParam<std::string> {};
+
+TEST_P(OpcodeTest, MatchesJsonTests) {
+    const std::string file = std::string(TEST_DATA_DIR) + "/" + GetParam() + ".json";
+    JsonTestReader reader(file);
+    const auto& tests = reader.getTests();
+    ASSERT_FALSE(tests.empty()) << "No tests loaded from " << file;
+
+    int failedCases = 0;
+
+    for (const auto& test : tests) {
+        const State& initial = test.initial;
+        const State& final = test.final;
+
+        CPU cpu(initial.pc, initial.stackPointer, initial.accumulator, initial.xRegister,
+                initial.yRegister, initial.pStatus);
+
+        for (const auto& memoryVal : initial.ram) {
+            cpu.setMemory(memoryVal[0], memoryVal[1]);
+        }
+
+        // Each JSON case is exactly one instruction ("cycles" are its bus accesses, not instructions)
+        cpu.executeInstruction();
+
+        std::ostringstream mismatches;
+        check(mismatches, "PC", final.pc, cpu.getProgramCounter());
+        check(mismatches, "Accumulator", final.accumulator, cpu.getAccumulator());
+        check(mismatches, "X Register", final.xRegister, cpu.getXRegister());
+        check(mismatches, "Y Register", final.yRegister, cpu.getYRegister());
+        check(mismatches, "P Status", final.pStatus, cpu.getPStatus());
+        check(mismatches, "Stack Pointer", final.stackPointer, cpu.getStackPointer());
+
+        for (const auto& memoryVal : final.ram) {
+            check(mismatches, "Memory[" + std::to_string(memoryVal[0]) + "]",
+                  memoryVal[1], cpu.getMemory(memoryVal[0]));
+        }
+
+        if (!mismatches.str().empty()) {
+            failedCases++;
+            if (failedCases <= kMaxReportedFailures) {
+                ADD_FAILURE() << "Case [" << test.name << "]\n" << mismatches.str();
+            }
+        }
+    }
+
+    EXPECT_EQ(failedCases, 0) << failedCases << " of " << tests.size()
+                              << " cases failed for opcode " << GetParam();
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    CPU, OpcodeTest, ::testing::ValuesIn(findOpcodeFiles()),
+    [](const ::testing::TestParamInfo<std::string>& info) { return "op_" + info.param; });
