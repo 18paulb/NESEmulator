@@ -34,6 +34,18 @@ void CPU::JMP_Absolute(uint16_t address) {
     Care should be taken to ensure this variable does not cross a page.
 */
 void CPU::JMP_Indirect(uint16_t address) {
+
+    // We want to intentionally replicate the bug
+    if ((address & 0xFF) == 0xFF) {
+        uint8_t lowByte = memory[address];
+        uint8_t highByte = memory[address - 0xFF];
+        uint16_t targetAddress = (highByte << 8) | lowByte;
+
+        programCounter = targetAddress;
+
+        return;
+    }
+
     uint8_t lowByte = memory[address];
     uint8_t highByte = memory[address + 1];
     uint16_t targetAddress = highByte << 8 | lowByte;
