@@ -95,7 +95,7 @@ void CPU::ADC_ZeroPageX(uint8_t address) {
     // Check if carry flag is set
     uint8_t carryIn = isFlagSet(StatusFlag::Carry) ? 1 : 0;
     uint8_t ogAccumulator = accumulator;
-    uint8_t val = memory[address + xRegister];
+    uint8_t val = memory[(address + xRegister) % ZERO_PAGE_SIZE];
 
     // Use 16-bit addition to detect carry
     // Not super faithful to hardware but a good shortcut
@@ -191,7 +191,7 @@ void CPU::ADC_IndirectX(uint8_t address) {
     // Calculate the memory address
     uint8_t indirectAddress = address + xRegister;
     uint8_t lowByte = memory[indirectAddress];
-    uint8_t highByte = memory[indirectAddress + 1];
+    uint8_t highByte = memory[(indirectAddress + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     uint8_t val = memory[targetAddress];
 
@@ -219,7 +219,7 @@ void CPU::ADC_IndirectY(uint8_t address) {
 
     // Calculate the memory address
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[address + 1];
+    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     targetAddress += yRegister;
     uint8_t val = memory[targetAddress];
@@ -336,7 +336,7 @@ void CPU::SBC_ZeroPageX(uint8_t address) {
     // Check if carry flag is set
     uint8_t carryIn = isFlagSet(StatusFlag::Carry) ? 1 : 0;
     uint8_t ogAccumulator = accumulator;
-    uint8_t val = memory[address + xRegister];
+    uint8_t val = memory[(address + xRegister) % ZERO_PAGE_SIZE];
     val = ~val;
 
     // Use 16-bit addition to detect carry
@@ -436,7 +436,7 @@ void CPU::SBC_IndirectX(uint8_t address) {
     // Calculate the memory address
     uint8_t indirectAddress = address + xRegister;
     uint8_t lowByte = memory[indirectAddress];
-    uint8_t highByte = memory[indirectAddress + 1];
+    uint8_t highByte = memory[(indirectAddress + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     uint8_t val = memory[targetAddress];
     val = ~val;
@@ -465,7 +465,7 @@ void CPU::SBC_IndirectY(uint8_t address) {
 
     // Calculate the memory address
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[address + 1];
+    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     targetAddress += yRegister;
     uint8_t val = memory[targetAddress];

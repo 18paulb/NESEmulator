@@ -73,7 +73,7 @@ void CPU::LDA_AbsoluteY(uint16_t address) {
 void CPU::LDA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
     uint8_t lowByte = memory[val];
-    uint8_t highByte = memory[val + 1];
+    uint8_t highByte = memory[(val + 1) % ZERO_PAGE_SIZE];
 
     // Combine the low and high bytes to form a 16-bit target address
     uint16_t targetAddress = (highByte << 8) | lowByte;
@@ -83,7 +83,7 @@ void CPU::LDA_IndirectX(uint8_t address) {
 
 void CPU::LDA_IndirectY(uint8_t address) {
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[address + 1];
+    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     targetAddress += yRegister;
 
@@ -248,7 +248,7 @@ void CPU::STA_AbsoluteY(uint16_t address) {
 void CPU::STA_IndirectX(uint8_t address) {
     uint8_t val = address + xRegister;
     uint8_t lowByte = memory[val];
-    uint8_t highByte = memory[val + 1];
+    uint8_t highByte = memory[(val + 1) % ZERO_PAGE_SIZE];
 
     // Combine the low and high bytes to form a 16-bit target address
     uint16_t targetAddress = (highByte << 8) | lowByte;
@@ -258,7 +258,7 @@ void CPU::STA_IndirectX(uint8_t address) {
 
 void CPU::STA_IndirectY(uint8_t address) {
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[address + 1];
+    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
 
     uint16_t targetAddress = (highByte << 8) | lowByte;
 

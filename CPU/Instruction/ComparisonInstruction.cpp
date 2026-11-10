@@ -67,7 +67,7 @@ void CPU::CMP_ZeroPage(uint8_t address) {
 }
 
 void CPU::CMP_ZeroPageX(uint8_t address) {
-    uint8_t val = memory[address + xRegister];
+    uint8_t val = memory[(address + xRegister) % ZERO_PAGE_SIZE];
     uint8_t result = accumulator - val;
     uint8_t bit7 = GET_BIT(result, 7);
 
@@ -109,7 +109,7 @@ void CPU::CMP_AbsoluteY(uint16_t address) {
 void CPU::CMP_IndirectX(uint8_t address) {
     uint8_t indirectAddress = address + xRegister;
     uint8_t lowByte = memory[indirectAddress];
-    uint8_t highByte = memory[indirectAddress + 1];
+    uint8_t highByte = memory[(indirectAddress + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
 
     uint8_t val = memory[targetAddress];
@@ -123,7 +123,7 @@ void CPU::CMP_IndirectX(uint8_t address) {
 
 void CPU::CMP_IndirectY(uint8_t address) {
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[address + 1];
+    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
     uint16_t targetAddress = (highByte << 8) | lowByte;
     targetAddress += yRegister;
 

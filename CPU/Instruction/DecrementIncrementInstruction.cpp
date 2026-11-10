@@ -38,8 +38,8 @@ void CPU::DEC_ZeroPage(uint8_t address) {
 }
 
 void CPU::DEC_ZeroPageX(uint8_t address) {
-    memory[address + xRegister] -= 1;
-    setZeroAndNegativeFlag(memory[address + xRegister]);
+    memory[(address + xRegister) % ZERO_PAGE_SIZE] -= 1;
+    setZeroAndNegativeFlag(memory[(address + xRegister) % ZERO_PAGE_SIZE]);
 }
 
 void CPU::DEC_Absolute(uint16_t address) {
@@ -94,8 +94,8 @@ void CPU::INC_ZeroPage(uint8_t address) {
 }
 
 void CPU::INC_ZeroPageX(uint8_t address) {
-    memory[address + xRegister] += 1;
-    setZeroAndNegativeFlag(memory[address + xRegister]);
+    memory[(address + xRegister) % ZERO_PAGE_SIZE] += 1;
+    setZeroAndNegativeFlag(memory[(address + xRegister) % ZERO_PAGE_SIZE]);
 }
 
 void CPU::INC_Absolute(uint16_t address) {
@@ -104,8 +104,8 @@ void CPU::INC_Absolute(uint16_t address) {
 }
 
 void CPU::INC_AbsoluteX(uint16_t address) {
-    memory[address + xRegister] += 1;
-    setZeroAndNegativeFlag(memory[address + xRegister]);
+    memory[(address + xRegister) % ZERO_PAGE_SIZE] += 1;
+    setZeroAndNegativeFlag(memory[(address + xRegister) % ZERO_PAGE_SIZE]);
 }
 
 void CPU::executeINX() {

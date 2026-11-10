@@ -28,6 +28,8 @@ using namespace std;
 #define FLAG_V (1 << 6)    // Overflow
 #define FLAG_N (1 << 7)    // Negative
 
+#define ZERO_PAGE_SIZE 256
+
 #define BIT_7 0x80
 
 // bit is 0-indexed
