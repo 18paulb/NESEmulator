@@ -49,8 +49,11 @@ void CPU::executeBRK() {
 void CPU::executeRTI() {
     uint8_t statusFlags = popFromStack();
 
-    // Clear the Break Flag
+    //Clear the Break Flag
     statusFlags &= ~FLAG_B;
+
+    // The flag extra should always stay on
+    statusFlags |= FLAG_EXTRA;
 
     pStatus = statusFlags;
 

@@ -31,5 +31,12 @@ void CPU::executePLA() {
     TLDR; if problems occur with IRQ being active, might have to delay changing I flag 1 instruction
 */
 void CPU::executePLP() {
-    pStatus = popFromStack();
+    uint8_t statusFlags = popFromStack();
+
+    //Clear the Break Flag
+    statusFlags &= ~FLAG_B;
+    // The flag extra should always stay on
+    statusFlags |= FLAG_EXTRA;
+
+    pStatus = statusFlags;
 }
