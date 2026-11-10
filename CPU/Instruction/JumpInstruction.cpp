@@ -35,7 +35,7 @@ void CPU::JMP_Absolute(uint16_t address) {
 */
 void CPU::JMP_Indirect(uint16_t address) {
     uint8_t lowByte = memory[address];
-    uint8_t highByte = memory[(address + 1) % ZERO_PAGE_SIZE];
+    uint8_t highByte = memory[address + 1];
     uint16_t targetAddress = highByte << 8 | lowByte;
 
     programCounter = targetAddress;

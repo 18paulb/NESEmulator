@@ -104,8 +104,8 @@ void CPU::INC_Absolute(uint16_t address) {
 }
 
 void CPU::INC_AbsoluteX(uint16_t address) {
-    memory[(address + xRegister) % ZERO_PAGE_SIZE] += 1;
-    setZeroAndNegativeFlag(memory[(address + xRegister) % ZERO_PAGE_SIZE]);
+    memory[address + xRegister] += 1;
+    setZeroAndNegativeFlag(memory[address + xRegister]);
 }
 
 void CPU::executeINX() {
